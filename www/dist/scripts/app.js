@@ -218,7 +218,7 @@ function connectWithPort(port) {
 app.factory('gattip',
             ['$q', '$rootScope', '$location',
              function ($q, $rootScope, $location) {
-                alert("Stop for debugger....");
+                //alert("Stop for debugger....");
              
                 var util = Util();
              
