@@ -1,0 +1,16 @@
+*.xcuserdatad
+*.xcworkspace
+*.metadata
+*.idea
+www/.idea
+ 
+
+.DS_Store
+
+node_modules
+.tmp
+.sass-cache
+bower_components
+bin
+gen
+builds

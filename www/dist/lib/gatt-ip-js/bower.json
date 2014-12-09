@@ -1,0 +1,20 @@
+{
+  "name": "gatt-ip-js",
+  "version": "1.0.1",
+  "homepage": "https://github.com/gatt-ip/gatt-ip-js",
+  "authors": [
+    "vensi.com"
+  ],
+  "description": "Gattip JS file",
+  "main": "gatt-ip.js",
+  "keywords": [
+    "gattip",
+    "gatt-ip",
+    "gattip-app",
+    "gatt-ip-app",
+    "gattip-js",
+    "gatt-ip-js"
+  ],
+  "license": "MIT",
+  "ignore": []
+}

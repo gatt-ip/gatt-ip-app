@@ -1,0 +1,27 @@
+<body>
+<div class="row logo-header">
+  <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 back-btn" ng-click="back()"></div>
+  <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
+  <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()"><h3>Log</h3></div>
+</div>
+<div class="row title-text">
+<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12"><h2 class="uuid-title">UUID: {{gattip.currentService.uuid}}</h2></div>
+</div>
+
+<a ng-repeat="characteristic in gattip.currentService.characteristics" ng-click="discoverDescriptors(characteristic)">
+<div class="row listview" style="height:50px;">
+<div class="col-lg-11 col-sm-11 col-xs-11 col-md-11">
+<div class="row">
+<!--<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 col-1"><h4>Accel.Sens.Low</h4></div>-->
+<!--<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 col-2" ng-show='charName' ><p>{{characteristic.characteristicName}}</p></div>-->
+<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 col-2"><p>{{characteristic.uuid}}</p></div>
+<div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 col-3">Properties :
+    <span ng-repeat="property in characteristic.properties"><span ng-show='property.enabled'>{{property.name}},  </span></span>
+</div>
+</div>
+</div>
+<div class="col-lg-1 col-sm-1 col-xs-1 col-md-1 properties-arrow-icon"></div>
+</div>
+</a>
+
+</body>

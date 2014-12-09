@@ -1,0 +1,16 @@
+[submodule "iOS/CoreWebSocket"]
+	path = iOS/CoreWebSocket
+	url = git://github.com/gatt-ip/CoreWebSocket.git
+	branch = ios-build
+
+[submodule "iOS/SocketRocket"]
+	path = iOS/SocketRocket
+	url = https://github.com/gatt-ip/SocketRocket.git
+[submodule "iOS/GATT-IP-LIB"]
+	path = iOS/GATT-IP-LIB
+	url = https://github.com/gatt-ip/gatt-ip-ios.git
+	branch = develop
+[submodule "Android/GATT-IP-LIB"]
+	path = Android/GATT-IP-LIB
+	url = https://github.com/gatt-ip/gatt-ip-android.git
+	branch = develop
