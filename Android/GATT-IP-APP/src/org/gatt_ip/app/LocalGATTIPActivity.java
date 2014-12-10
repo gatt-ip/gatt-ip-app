@@ -89,7 +89,6 @@ public class LocalGATTIPActivity extends Activity {
 	public void onResume()
 	{
 		super.onResume();
-		GATTIP.startBroadcasting();
 	}
 	
 	@Override
@@ -283,6 +282,7 @@ public class LocalGATTIPActivity extends Activity {
 	    //method called when we got connection request from client
 		@Override
 		public void onOpen(WebSocket conn, ClientHandshake handShake) {
+			 GATTIP.startBroadcasting();
 			 Log.v("GATTIPServer","connection to " + conn.getRemoteSocketAddress());		
 		}
 

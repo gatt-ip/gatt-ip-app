@@ -49,7 +49,7 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener {
 		ctx = this;
 		initializeViews();
 		setListenersToViews();
-		editText.setText("ws://app.vensiconnect.com:3037");
+		//editText.setText("ws://app.vensiconnect.com:3037");
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 	}
