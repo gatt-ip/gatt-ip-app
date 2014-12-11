@@ -1,6 +1,6 @@
 {
   "name": "gatt-ip-js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/gatt-ip/gatt-ip-js",
   "authors": [
     "vensi.com"
@@ -13,7 +13,9 @@
     "gattip-app",
     "gatt-ip-app",
     "gattip-js",
-    "gatt-ip-js"
+    "gatt-ip-js",
+    "bluetooth",
+    "gateway"
   ],
   "license": "MIT",
   "ignore": []
