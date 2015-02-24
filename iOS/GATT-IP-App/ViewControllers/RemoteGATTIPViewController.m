@@ -42,7 +42,6 @@
 {
     [super viewDidLoad];
     appDelegate = (GATTIPAppDelegate *)[[UIApplication sharedApplication] delegate];
-    // [_locationTextField  setText:@"ws://app.vensiconnect.com:3033"];
     _locationTextField.delegate = self;
     _topHeader.backgroundColor = [self colorWithHexString:@"063b63"];
 }

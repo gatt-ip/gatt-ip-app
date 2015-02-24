@@ -2,9 +2,9 @@
   "name": "GATT-IP",
   "version": "0.0.0",
   "dependencies": {
-    "angular-route": "~1.2.22",
-    "angular-local-storage": "~0.0.7",
-    "bootstrap": "~3.1.1",
-    "gatt-ip-js":"~1.0.2"
+    "angular-route": "latest",
+    "angular-local-storage": "latest",
+    "bootstrap": "latest",
+    "gatt-ip-js":"latest"
   }
 }

@@ -26,6 +26,7 @@ var DIST_JAVASCRIPT = path.join(DIST, "scripts");
 var DIST_IMAGES = path.join(DIST, "images");
 
 var MAIN_SCRIPT = "app.js";
+var file_number = new Date().getTime();
 
 //CSS
 function compileCss() {
@@ -40,7 +41,7 @@ gulp.task("compile:css", ["clean"], function() {
 // Minify the CSS
 gulp.task("dist:css", ["clean"], function() {
   return compileCss()
-    .pipe(rename({ suffix: ".min" }))
+    .pipe(rename({ suffix: ".min-"+file_number }))
     .pipe(require('gulp-minify-css')())
     .pipe(gulp.dest(DIST_CSS));
 });
@@ -61,7 +62,7 @@ gulp.task("compile:javascript", ["clean"], function() {
 // Uglify the JS
 gulp.task("dist:javascript", ["clean"], function() {
   return compileJavaScript()
-    .pipe(rename({ suffix: ".min" }))
+    .pipe(rename({ suffix: ".min-"+file_number }))
     .pipe(require('gulp-ngmin')()) // ngmin makes angular injection syntax compatible with uglify
     .pipe(require("gulp-uglify")())
     .pipe(gulp.dest(DIST_JAVASCRIPT));
@@ -93,26 +94,28 @@ gulp.task("dist:html", ["clean"], function() {
   var replace = require('gulp-replace');
 
   return gulp.src(SRC_HTML)
-      .pipe(replace(/\.js/g, ".min.js"))
-      .pipe(replace(/\.css/g, ".min.css"))
+      //.pipe(replace(/\.js/g, ".min.js"))
+      //.pipe(replace(/\.css/g, ".min.css"))
+      .pipe(replace(/(scripts\/)(.*)(.js)/g, "$1$2.min-"+file_number+".js"))
+      .pipe(replace(/(styles\/)(.*)(.css)/g, "$1$2.min-"+file_number+".css"))
       .pipe(gulp.dest(DIST));
 });
 
 // Copy Bower assets
-gulp.task("copy-bower",["update"], function() {
+gulp.task("copy-bower", ["update"], function() {
   return gulp.src("bower_components/**")
     .pipe(gulp.dest(DIST_LIB));
 });
-/*gulp.task("copy-js", ["clean"], function() {
+gulp.task("copy-js", ["clean"], function() {
   return gulp.src("app/*.js")
     .pipe(gulp.dest(DIST));
-});*/
+});
 
 // Compile everything
-gulp.task("compile", ["copy-bower", /*"copy-js",*/ "compile:html", "compile:css", "compile:javascript", "compile:images"]);
+gulp.task("compile", ["copy-bower", "copy-js", "compile:html", "compile:css", "compile:javascript", "compile:images"]);
 
 // Dist everything
-gulp.task("dist", ["copy-bower", /*"copy-js",*/ "dist:html", "dist:css", "dist:javascript", "dist:images"]);
+gulp.task("dist", ["copy-bower", "copy-js", "dist:html", "dist:css", "dist:javascript", "dist:images"]);
 
 // Clean the DIST dir
 gulp.task("clean", function() {
