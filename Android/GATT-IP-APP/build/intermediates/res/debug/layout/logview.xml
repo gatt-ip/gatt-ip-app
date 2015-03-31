@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+     <RelativeLayout
+        android:id="@+id/urlContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/topbg"
+        android:orientation="horizontal" >
+        <Button
+            android:id="@+id/emailBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/align_10"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:text="@string/email"
+            android:textColor="@color/bgblue"
+            android:textSize="@dimen/text_size" />
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/logo_width"
+            android:layout_height="@dimen/logo_hight"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/logo" />
+        <Button
+            android:id="@+id/closeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/align_10"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:text="@string/close"
+            android:textColor="@color/bgblue"
+            android:textSize="@dimen/text_size" />  
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/logContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/urlContainer"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/logView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/align_10"
+            android:layout_gravity="left" 
+            android:textSize="@dimen/hint_size" 
+            android:scrollbars = "vertical" />
+    </LinearLayout>
+        
+</RelativeLayout><!-- From: file:/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/res/layout/logview.xml -->

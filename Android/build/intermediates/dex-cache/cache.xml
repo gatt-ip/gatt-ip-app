@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/libs/androidasync-1.0.9.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3a6caaad2ff0332720412b63e485167659a58287">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/androidasync-1.0.9-c8b0e6e3a89c652b61bc0576c9fe46a017b4884a.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/exploded-aar/com.crashlytics.sdk.android/beta/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0d6546c1c73cb64a6907f694e6c4bf4b50fefa70">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/classes-9d92801ec1c3008cc5763a371dcb43e906ba45b1.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/exploded-aar/Android/GATT-IP-LIB/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="279ec4a072beaca942bbab9d32b9fad73cd18a34">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/classes-df71c4a6af560dc807ad2fe6efb302cc1fd06bba.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/exploded-aar/com.crashlytics.sdk.android/crashlytics/2.2.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1014d409d1af641616ca7a2b3fda549cf559d605">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/classes-6d7b78e884b1b63b17020744ca1c6cd7701ea56d.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/libs/android-support-v4.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ded9acc6a9792b8f1afc470f0c9cd36d178914cd">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/android-support-v4-66094aeb8f139c014199a9b047fc01ecc962a7b2.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/libs/java_websocket.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="35f488c2a8cb28569c1bbf69abcb1b8b04db8e01">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/java_websocket-7b1483ef2b6930765e7d48b590f2949894cdb6b6.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/exploded-aar/com.crashlytics.sdk.android/answers/1.1.2/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="158555fbeff80e5a85464a818eadda8a448a1051">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/classes-e6673dd088401a10454d8a984c3bef0f6828a627.jar" />
+    </item>
+    <item
+        jar="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/exploded-aar/io.fabric.sdk.android/fabric/1.2.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="0a4af6a85230b990eb8690b696d2db9247338611">
+        <dex dex="/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-APP/build/intermediates/pre-dexed/debug/classes-f197095501e313f0926021ed398e30ad61c92bae.jar" />
+    </item>
+
+</items>

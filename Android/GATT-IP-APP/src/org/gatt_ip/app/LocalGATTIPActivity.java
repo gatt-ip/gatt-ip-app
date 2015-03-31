@@ -1,5 +1,7 @@
 package org.gatt_ip.app;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.InetSocketAddress;
@@ -30,6 +32,7 @@ import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.webkit.JavascriptInterface;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -47,9 +50,11 @@ public class LocalGATTIPActivity extends Activity {
 	
 	public GATTIP gattip;
 	@SuppressLint("SetJavaScriptEnabled")
+    @JavascriptInterface
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Fabric.with(this, new Crashlytics());
 		setContentView(R.layout.local_gattip);
 		ctx = this;
 		lActivity = this;
@@ -89,13 +94,14 @@ public class LocalGATTIPActivity extends Activity {
 	public void onResume()
 	{
 		super.onResume();
+		//GATTIP.startBroadcasting();
 	}
 	
 	@Override
     public void onDestroy() {
         super.onDestroy();
         GATTIP.stopBroadcasting();
-     }
+    }
 	
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -255,7 +261,6 @@ public class LocalGATTIPActivity extends Activity {
 		
 		public GATTIPServer(Context ctx) throws UnknownHostException {
 			super();
-			Log.v("GATTIPServer","GATTIPServer");
 			gattip = new GATTIP(ctx);
 			gattip.setGATTIPListener(this);
 		}		

@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.gatt_ip.GATTIP;
 import org.gatt_ip.GATTIPListener;
 import org.gatt_ip.activity.R;
@@ -13,7 +12,6 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -49,7 +47,7 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener {
 		ctx = this;
 		initializeViews();
 		setListenersToViews();
-		//editText.setText("ws://app.vensiconnect.com:3037");
+		editText.setText("ws://app.vensiconnect.com:3037");
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
 	}
@@ -193,7 +191,6 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener {
 
 		public GATTIPClient(URI serverUri, Draft draft) {
 			super(serverUri, draft);
-			Log.v("GATTIPClient", "" + serverUri);
 		}
 
 		public GATTIPClient(URI serverURI, Context ctx) {
@@ -204,7 +201,6 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void onOpen(ServerHandshake handshakedata) {
-			Log.v("GATTIPClient", "new connection opened");
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -214,7 +210,6 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener {
 					toast.show();
 					connectBtn.setTextColor(ctx.getResources().getColor(R.color.orange));
 					connectBtn.setText("Disconnect");
-					//editText.setText("");
 				}
 			});
 		}
