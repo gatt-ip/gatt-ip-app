@@ -10,6 +10,7 @@ var SRC_CSS_BASE  = path.join(SRC,"styles");
 var SRC_JAVASCRIPT_BASE  = path.join(SRC, "scripts");
 var SRC_IMAGES_BASE  = path.join(SRC, "images");
 var SRC_VIEWS_BASE  = path.join(SRC, "views");
+var SRC_FONTS_BASE  = path.join(SRC, "fonts");
 
 var SRC_ALL  = path.join(SRC, "**");
 var SRC_HTML  = path.join(SRC, "**", "*.html");
@@ -17,6 +18,7 @@ var SRC_CSS_ALL  = path.join(SRC_CSS_BASE, "**", "*.css");
 var SRC_JAVASCRIPT_ALL  = path.join(SRC_JAVASCRIPT_BASE, "**", "*.js");
 var SRC_IMAGES_ALL  = path.join(SRC_IMAGES_BASE, "**", "*");
 var SRC_VIEWS_ALL  = path.join(SRC_VIEWS_BASE, "**", "*.html");
+var SRC_FONTS_ALL  = path.join(SRC_FONTS_BASE, "**", "*");
 
 var DIST = "dist";
 var DIST_LIB = path.join(DIST, "lib");
@@ -24,6 +26,7 @@ var DIST_ALL = path.join(DIST, "**");
 var DIST_CSS = path.join(DIST, "styles");
 var DIST_JAVASCRIPT = path.join(DIST, "scripts");
 var DIST_IMAGES = path.join(DIST, "images");
+var DIST_FONTS = path.join(DIST, "fonts");
 
 var MAIN_SCRIPT = "app.js";
 var file_number = new Date().getTime();
@@ -82,9 +85,9 @@ gulp.task("dist:images", ["clean"], function() {
 });
 
 // Copy fonts folders
-gulp.task("copy-fonts", ["update"], function() {
-  return gulp.src("fonts/**")
-    .pipe(gulp.dest(DIST_LIB));
+gulp.task("copy-fonts", ["clean"], function() {
+  return gulp.src(SRC_FONTS_ALL)
+    .pipe(gulp.dest(DIST_FONTS));
 });
 
 
