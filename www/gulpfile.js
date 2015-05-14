@@ -81,6 +81,12 @@ gulp.task("dist:images", ["clean"], function() {
     .pipe(gulp.dest(DIST_IMAGES));
 });
 
+// Copy fonts folders
+gulp.task("copy-fonts", ["update"], function() {
+  return gulp.src("fonts/**")
+    .pipe(gulp.dest(DIST_LIB));
+});
+
 
 // Copy the html assets without modification
 gulp.task("compile:html", ["clean"], function() {
@@ -112,10 +118,10 @@ gulp.task("copy-js", ["clean"], function() {
 });
 
 // Compile everything
-gulp.task("compile", ["copy-bower", "copy-js", "compile:html", "compile:css", "compile:javascript", "compile:images"]);
+gulp.task("compile", ["copy-bower", "copy-fonts", "copy-js", "compile:html", "compile:css", "compile:javascript", "compile:images"]);
 
 // Dist everything
-gulp.task("dist", ["copy-bower", "copy-js", "dist:html", "dist:css", "dist:javascript", "dist:images"]);
+gulp.task("dist", ["copy-bower", "copy-fonts", "copy-js", "dist:html", "dist:css", "dist:javascript", "dist:images"]);
 
 // Clean the DIST dir
 gulp.task("clean", function() {
