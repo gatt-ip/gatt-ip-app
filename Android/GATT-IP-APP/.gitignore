@@ -8,7 +8,8 @@
 .tmp
 .sass-cache
 
-bin
-gen
-builds
+bin/
+gen/
+build/
+build/intermediates
 

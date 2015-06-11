@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/admin/Documents/surya_workspace/github/new_gatt_ip_app/gatt-ip-app/Android/GATT-IP-LIB/res/values-w820dp/dimens.xml -->
+    <!-- From: file:/Users/admin/Documents/surya_workspace/github/test2/gatt-ip-app/Android/GATT-IP-LIB/res/values-w820dp/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">64dp</dimen>
 </resources>
