@@ -1,0 +1,32 @@
+<body>
+<div class="row logo-header">
+  <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 remote-view" ng-click="gotoremoteview()">
+    <h3>Remote</h3>
+  </div>
+  <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
+  <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()">
+    <h3>Log</h3>
+  </div>
+</div>
+<div class="row title-text">
+  <h3>PERIPHERALS NEARBY</h3>
+</div>
+<div class="pull" style="display:none">Pull down</div>
+<div class="PullToRefresh">
+  <div class="iscroll-scroller">
+    <div class="iscroll-content"> <a ng-repeat="peripheral in gattip.peripherals" ng-click="connectPeripheral(peripheral)">
+      <div class="row listview" >
+        <div class="col-lg-1 col-xs-1 col-sm-1 col-md-1 signal-strength">
+          <div class="row">
+            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12"><img ng-src={{peripheral.image}} alt="SS" /></div>
+            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">{{peripheral.rssi}}</div>
+          </div>
+        </div>
+        <div class="col-lg-10 col-xs-10 col-sm-10 col-md-10 devicename">{{peripheral.name}}</div>
+        <div class="col-lg-1 col-xs-1 col-sm-1 col-md-1 devicelist-arrow-icon"></div>
+      </div>
+      </a> </div>
+  </div>
+</div>
+</div>
+</body>

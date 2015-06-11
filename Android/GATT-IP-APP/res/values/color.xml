@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     
+    <color name="white">#FFFFFF</color>
+    <color name="carandroid">#CBE462</color> 
+    <color name="bgcolor">#3A3A3A</color>    
+    <color name="orange">#F78F1E</color>
+    <color name="ash">#757575</color>
+    <color name="trans">#B0000000</color>
+	<color name="dimblack">#424242</color>
+	<color name="green">#1B4D08</color>
+	<color name="yellow">#EC9603</color>
+	<color name="blue">#007aff</color>
+	<color name="dimblue">#012942</color>
+    <color name="txtColor">#57d414</color>
+	<color name="black_dip_bg">#0C0C0D</color>
+	<color name="red_dip_bg">#7C0C00</color>
+	<color name="yellow_dip_bg">#EC9603</color>
+	<color name="green_dip_bg">#424242</color>
+	<color name="blue_dip_bg">#012942</color>
+	<color name="header_pressed">#ffc0392b</color>
+	<color name="header_normal">#ffe74c3c</color>
+	<color name="sticky_header">#f1f1f1</color>
+	<color name="black">#292929</color>
+	<color name="red">#da212c</color>
+	<color name="cream">#ededed</color>
+	<color name="bgblue">#005cff</color>
+	<color name="topbgblue">#063b63</color>
+	<color name="topbg">#e0dede</color>
+	
+	
+</resources>

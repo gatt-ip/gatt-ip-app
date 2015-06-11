@@ -1,0 +1,14 @@
+
+*.idea
+
+
+.DS_Store
+
+
+.tmp
+.sass-cache
+
+bin
+gen
+builds
+
