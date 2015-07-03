@@ -1,8 +1,5 @@
 package org.gatt_ip.app;
 
-import java.util.List;
-import org.gatt_ip.activity.R;
-import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,16 +9,17 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.gatt_ip.activity.R;
+
 public class LogView extends Activity implements OnClickListener {
 	
 	private Button closeBtn,emailBtn;
 	private TextView logView;
-	public List<JSONObject> listOfMessages;
 	String logData;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//ctx = this;
 		setContentView(R.layout.logview);
 		initializeViews();
 		setListenersToViews();
