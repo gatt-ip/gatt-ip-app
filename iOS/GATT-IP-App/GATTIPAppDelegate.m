@@ -22,12 +22,16 @@
  */
 
 #import "GATTIPAppDelegate.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
 
 @implementation GATTIPAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [Fabric with:@[CrashlyticsKit]];
     return YES;
 }
 
@@ -62,5 +66,18 @@
 {
     return [[Reachability reachabilityWithHostName:@"www.google.com"] currentReachabilityStatus];
 }
+
+-(void)showAlert : (NSString *)alertMessage withTitle : (NSString *)title
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+                                                    message:alertMessage
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    
+}
+
+
 
 @end

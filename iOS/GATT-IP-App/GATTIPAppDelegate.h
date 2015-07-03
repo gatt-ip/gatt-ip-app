@@ -29,4 +29,5 @@
 @property (strong, nonatomic) UIWindow *window;
 
 -(NetworkStatus)checkReachability;
+-(void)showAlert : (NSString *)alertMessage withTitle : (NSString *)title;
 @end

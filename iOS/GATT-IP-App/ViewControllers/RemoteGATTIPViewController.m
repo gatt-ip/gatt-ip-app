@@ -42,6 +42,7 @@
 {
     [super viewDidLoad];
     appDelegate = (GATTIPAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [_locationTextField setPlaceholder:@"ws://<hostname>:<port>"];
     _locationTextField.delegate = self;
     _topHeader.backgroundColor = [self colorWithHexString:@"063b63"];
 }
@@ -71,23 +72,13 @@
     {
         if([_locationTextField.text isEqualToString:@""])
         {
-            UIAlertView *alertMessage = [ [UIAlertView alloc] initWithTitle:@""
-                                                                    message:@"Please enter Host Name or IP address."
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-            [alertMessage show];
+            [appDelegate showAlert:@"Please enter Host Name or IP address." withTitle:@""];
             return;
         }
         
         if(![self validateUrl:_locationTextField.text])
         {
-            UIAlertView *alertMessage = [ [UIAlertView alloc] initWithTitle:nil
-                                                                    message:@"Invalid Address. Please enter a valid HOST or IP Address"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-            [alertMessage show];
+            [appDelegate showAlert:@"Invalid Address. Please enter a valid HOST or IP Address" withTitle:nil];
             return;
         }
         
@@ -103,12 +94,7 @@
             [UIApplication sharedApplication].idleTimerDisabled = YES;
             
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Network"
-                                                            message:@"There is no network, which is required to connect to the remote server."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
+            [appDelegate showAlert:@"There is no network, which is required to connect to the remote server." withTitle:@"No Network"];
         }
     } else if([state isEqualToString:@"Disconnect"])
     {
@@ -158,13 +144,8 @@
     _srWebSocket = nil;
     _gattip = nil;
     
-    UIAlertView *alertMessage = [ [UIAlertView alloc] initWithTitle:nil
-                                                            message:@"An error occured. Please try again."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-    [alertMessage show];
-    
+    [appDelegate showAlert:@"An error occured. Please try again." withTitle:nil];
+
     [_connectBtn setTitle:@"Connect" forState:UIControlStateNormal];
     [_connectBtn setTitleColor:[self colorWithHexString:@"005cff"] forState:UIControlStateNormal];
 }

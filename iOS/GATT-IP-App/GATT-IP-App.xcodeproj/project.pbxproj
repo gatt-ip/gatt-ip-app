@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		286AC1BC19FF457F0014A393 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286AC1BB19FF457F0014A393 /* MessageUI.framework */; };
+		84A2AD9A1B0163BB00E09ED6 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A2AD981B0163BB00E09ED6 /* Fabric.framework */; };
+		84A2AD9B1B0163BB00E09ED6 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A2AD991B0163BB00E09ED6 /* Crashlytics.framework */; };
 		8F0C39B719E626B6003E6A97 /* GATTIPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F0C39B619E626B6003E6A97 /* GATTIPAppDelegate.m */; };
 		8F0C39B919E6273C003E6A97 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F0C39B819E6273C003E6A97 /* Images.xcassets */; };
 		8F0C39BF19E62752003E6A97 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F0C39BC19E62752003E6A97 /* Main.storyboard */; };
@@ -85,6 +87,8 @@
 
 /* Begin PBXFileReference section */
 		286AC1BB19FF457F0014A393 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		84A2AD981B0163BB00E09ED6 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		84A2AD991B0163BB00E09ED6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		8F0C398C19E6254C003E6A97 /* GATT-IP-App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GATT-IP-App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F0C39B519E626B6003E6A97 /* GATTIPAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GATTIPAppDelegate.h; sourceTree = SOURCE_ROOT; };
 		8F0C39B619E626B6003E6A97 /* GATTIPAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GATTIPAppDelegate.m; sourceTree = SOURCE_ROOT; };
@@ -114,7 +118,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A2AD9A1B0163BB00E09ED6 /* Fabric.framework in Frameworks */,
 				8FF2E55C19F0BE3800CB0BC6 /* libicucore.dylib in Frameworks */,
+				84A2AD9B1B0163BB00E09ED6 /* Crashlytics.framework in Frameworks */,
 				8F0C3C3119E62855003E6A97 /* libGATT-IP-LIB.a in Frameworks */,
 				8F0C3C3219E62855003E6A97 /* libSocketRocket.a in Frameworks */,
 				8FCFE16F1A0E60B1004EF9E6 /* libCoreWebSocket.a in Frameworks */,
@@ -129,6 +135,8 @@
 		8F0C398319E6254C003E6A97 = {
 			isa = PBXGroup;
 			children = (
+				84A2AD981B0163BB00E09ED6 /* Fabric.framework */,
+				84A2AD991B0163BB00E09ED6 /* Crashlytics.framework */,
 				8FBF4CA919FE9B05002F74AC /* www */,
 				8F0C398E19E6254C003E6A97 /* GATT-IP-App */,
 				8F0C3C0E19E6280E003E6A97 /* Frameworks */,
@@ -234,6 +242,7 @@
 				8F0C398819E6254C003E6A97 /* Sources */,
 				8F0C398919E6254C003E6A97 /* Frameworks */,
 				8F0C398A19E6254C003E6A97 /* Resources */,
+				84A2AD971B0162BC00E09ED6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -362,6 +371,22 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		84A2AD971B0162BC00E09ED6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 6d715e3b8a10e69b3a20cd54082e9302ff8318b9 323b6e3eee1d25e6815e3b4730cd6815403a4c3a24dfce8b2f957e05119e693e";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8F0C398819E6254C003E6A97 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -407,8 +432,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Deepthi Musunuru (N9Y22EAN9B)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Deepthi Musunuru (N9Y22EAN9B)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Surya A (26RJT59URG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Surya A (26RJT59URG)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -429,7 +454,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "D9FE46E4-7997-467D-B70F-0E650D22485A";
+				PROVISIONING_PROFILE = "f53a19ad-cb66-4d04-9398-f71068630baa";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/../GATT-IP-LIB/GATT-IP-LIB ${SRCROOT}/../SocketRocket/** ${SRCROOT}/../CoreWebSocket/**";
@@ -453,8 +478,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Deepthi Musunuru (N9Y22EAN9B)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Deepthi Musunuru (N9Y22EAN9B)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Surya A (26RJT59URG)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Surya A (26RJT59URG)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -468,7 +493,7 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "D9FE46E4-7997-467D-B70F-0E650D22485A";
+				PROVISIONING_PROFILE = "f53a19ad-cb66-4d04-9398-f71068630baa";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "${SRCROOT}/../GATT-IP-LIB/GATT-IP-LIB ${SRCROOT}/../SocketRocket/** ${SRCROOT}/../CoreWebSocket/**";
@@ -481,12 +506,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Surya A (26RJT59URG)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/GATTIP-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f53a19ad-cb66-4d04-9398-f71068630baa";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -496,12 +525,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Surya A (26RJT59URG)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/GATTIP-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "f53a19ad-cb66-4d04-9398-f71068630baa";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
