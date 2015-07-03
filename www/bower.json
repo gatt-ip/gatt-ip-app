@@ -5,6 +5,6 @@
     "angular-route": "latest",
     "angular-local-storage": "latest",
     "bootstrap": "latest",
-    "gatt-ip-js":"latest"
+    "gatt-ip-js": "latest"
   }
 }

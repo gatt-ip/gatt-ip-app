@@ -14,17 +14,19 @@
     </div>
     <div id="read">
         <div class="row header" ng-show="gattip.currentCharacteristic.properties[1].enabled||gattip.currentCharacteristic.properties[4].enabled">
-            <h3>READ/NOTIFIED VALUES</h3>
+            <h3>Read/Notified Values</h3>
         </div>
         <div class="row">
             <div class="container" style="padding:0px;">
+                <!--      <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="gattip.currentCharacteristic.properties[1].enabled">-->
                 <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4 desc-read-btn" ng-show="gattip.currentCharacteristic.properties[1].enabled">
+                    
                     <button type="button" class="btn btn-default read-btn" ng-click='readAgain()' value='Read Again'>Read</button>
                 </div>
-                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="gattip.currentCharacteristic.properties[4].enabled && !gattip.currentCharacteristic.isNotifying">
+                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="(gattip.currentCharacteristic.properties[4].enabled || gattip.currentCharacteristic.properties[5].enabled) && !gattip.currentCharacteristic.isNotifying">
                     <button type="button" class="btn btn-default listen-btn" ng-click="notify()" value='Listen for notifications'>Listen</button>
                 </div>
-                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show='gattip.currentCharacteristic.properties[4].enabled && gattip.currentCharacteristic.isNotifying'>
+                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show='(gattip.currentCharacteristic.properties[4].enabled || gattip.currentCharacteristic.properties[5].enabled) && gattip.currentCharacteristic.isNotifying'>
                     <button type="button" class="btn btn-default stop-btn" ng-click="stopNotify()" value='Stop notifications'>Stop</button>
                 </div>
             </div>
@@ -32,6 +34,7 @@
         
         <div class="row">
             <div class="container" style="padding:0px;">
+                <!--    <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4"  ng-show='gattip.currentCharacteristic.properties[1].enabled'>-->
                 <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4 hex-drop"  ng-show='gattip.currentCharacteristic.properties[1].enabled'>
                     <select class="form-control dropdown-values" ng-model="readformat" ng-change="changeFormat()">
                         <option value="0">Hex</option>
@@ -46,9 +49,9 @@
             </div>
         </div>
         
-        <div id='write' ng-show="gattip.currentCharacteristic.properties[3].enabled">
+        <div id='write' ng-show="gattip.currentCharacteristic.properties[3].enabled || gattip.currentCharacteristic.properties[2].enabled">
             <div class="row header">
-                <h3>WRITTEN VALUES</h3>
+                <h3>Writen Values</h3>
             </div>
             <div class="row">
                 <div class="container" style="padding:0px;">
@@ -71,7 +74,7 @@
         </div>
     </div>
     <div class="row header">
-        <h3>DESCRIPTORS</h3>
+        <h3>Descriptors</h3>
     </div>
     <div class="row" style="margin:10px 0px 10px 0px;">
         <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 descriptors" ng-repeat="descriptor in gattip.currentCharacteristic.descriptors">
@@ -80,9 +83,16 @@
         </div>
     </div>
     <div class="row header">
-        <h3>PROPERTIES</h3>
+        <h3>Properties</h3>
     </div>
     <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 rows" ng-repeat="property in gattip.currentCharacteristic.properties">
         <h2 ng-show='property.enabled'>{{property.name}}</h2>
+    </div>
+    
+    <div class="alert-box alert-btn" id="customalert" ng-controller="AlertController">
+        <div id="alertmessage"></div>
+        <div>
+            <button type="button" class="btn btn-blue3" ng-click="hide_alert()"><i class="fa fa-check"></i> OK </button>
+        </div>
     </div>
 </body>
