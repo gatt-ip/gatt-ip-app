@@ -14,3 +14,6 @@
 	path = Android/GATT-IP-LIB
 	url = https://github.com/gatt-ip/gatt-ip-android.git
 	branch = develop
+[submodule "Android/master"]
+	path = Android/master
+	url = https://github.com/gatt-ip/gatt-ip-android
