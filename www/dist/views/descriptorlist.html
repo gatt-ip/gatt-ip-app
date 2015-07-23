@@ -6,10 +6,10 @@
             <h3>Log</h3>
         </div>
     </div>
-    
+
     <div class="row title-text">
         <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
-            <h4 class="char">UUID : {{gattip.currentCharacteristic.uuid}}</h4>
+            <h4 class="char">UUID : {{gattip.currentCharacteristic.characteristicName}}</h4>
         </div>
     </div>
     <div id="read">
@@ -20,7 +20,7 @@
             <div class="container" style="padding:0px;">
                 <!--      <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="gattip.currentCharacteristic.properties[1].enabled">-->
                 <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4 desc-read-btn" ng-show="gattip.currentCharacteristic.properties[1].enabled">
-                    
+
                     <button type="button" class="btn btn-default read-btn" ng-click='readAgain()' value='Read Again'>Read</button>
                 </div>
                 <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="(gattip.currentCharacteristic.properties[4].enabled || gattip.currentCharacteristic.properties[5].enabled) && !gattip.currentCharacteristic.isNotifying">
@@ -31,11 +31,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="container" style="padding:0px;">
                 <!--    <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4"  ng-show='gattip.currentCharacteristic.properties[1].enabled'>-->
-                <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4 hex-drop"  ng-show='gattip.currentCharacteristic.properties[1].enabled'>
+                <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4 hex-drop" ng-show='gattip.currentCharacteristic.properties[1].enabled'>
                     <select class="form-control dropdown-values" ng-model="readformat" ng-change="changeFormat()">
                         <option value="0">Hex</option>
                         <option value="1">ASCII</option>
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id='write' ng-show="gattip.currentCharacteristic.properties[3].enabled || gattip.currentCharacteristic.properties[2].enabled">
             <div class="row header">
                 <h3>Writen Values</h3>
@@ -57,7 +57,7 @@
                 <div class="container" style="padding:0px;">
                     <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
                         <input ng-model="inputs" class="form-control write-text" id="exampleInputEmail1" placeholder="Write Value Here">
-                            </div>
+                    </div>
                     <div class="col-lg-4 col-xs-4 col-sm-2 col-md-4">
                         <select class="form-control dropdown-values" ng-model="writeformat">
                             <option value="0">Hex</option>
@@ -79,7 +79,7 @@
     <div class="row" style="margin:10px 0px 10px 0px;">
         <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 descriptors" ng-repeat="descriptor in gattip.currentCharacteristic.descriptors">
             <h2 ng-if="descriptors == []">0</h2>
-            <h2 ng-if="descriptors != []">{{descriptor.uuid}}</h2>
+            <h2 ng-if="descriptors != []">{{descriptor.descriptorName}}</h2>
         </div>
     </div>
     <div class="row header">
@@ -88,7 +88,7 @@
     <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 rows" ng-repeat="property in gattip.currentCharacteristic.properties">
         <h2 ng-show='property.enabled'>{{property.name}}</h2>
     </div>
-    
+
     <div class="alert-box alert-btn" id="customalert" ng-controller="AlertController">
         <div id="alertmessage"></div>
         <div>

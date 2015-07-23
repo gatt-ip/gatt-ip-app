@@ -99,14 +99,11 @@ public class LocalGATTIPActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("ondestroy","disconnect stick");
 
         if(gattip != null) {
             ArrayList<BluetoothGatt> connectedDevices = gattip.getConnectedDevices();
 
             if (connectedDevices != null) {
-                Log.d("connected devices", "" + connectedDevices.size());
-
                 for (BluetoothGatt gatt : connectedDevices) {
                     gatt.disconnect();
                 }
@@ -219,8 +216,7 @@ public class LocalGATTIPActivity extends Activity {
 
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
-        public void onPageFinished (WebView view, String url)
-        {
+        public void onPageFinished (WebView view, String url) {
             int port = server.getPort();
             Log.v("port number",""+port);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -251,24 +247,20 @@ public class LocalGATTIPActivity extends Activity {
             }
         }
 
-        public void gotoRemote()
-        {
+        public void gotoRemote() {
             Intent intent = new Intent(ctx, RemoteGATTIPActivity.class);
             startActivity(intent);
         }
 
-        public void gotoLog()
-        {
+        public void gotoLog() {
             Intent intent = new Intent(ctx, LogView.class);
             StringBuilder logCat = new StringBuilder();;
             List<JSONObject> previousRequests = null;
             if(gattip != null) {
                 previousRequests = gattip.listOFResponseAndRequests();
             }
-            if(previousRequests != null && previousRequests.size() > 0)
-            {
-                for(int i=0 ; i<previousRequests.size();i++)
-                {
+            if(previousRequests != null && previousRequests.size() > 0) {
+                for(int i=0 ; i<previousRequests.size();i++) {
                     logCat.append(previousRequests.get(i));
                     logCat.append(System.getProperty("line.separator"));
                     logCat.append("------------------------------------");
@@ -315,7 +307,7 @@ public class LocalGATTIPActivity extends Activity {
         public void onMessage(WebSocket conn, String message) {
             if(webSocket != null)
                 webSocket = null;
-            //Log.v("GATTIPServer","received message from " + conn.getRemoteSocketAddress() + ": " + message);
+            Log.v("GATTIPServer","received message from " + conn.getRemoteSocketAddress() + ": " + message);
             webSocket = conn;
             gattip.request(message);
         }
@@ -328,23 +320,6 @@ public class LocalGATTIPActivity extends Activity {
 
         @Override
         public void response(String gattipMsg) {
-            Log.v("response", gattipMsg);
-            /*try {
-                Log.v("response",gattipMsg);
-                JSONObject response  = new JSONObject(gattipMsg);
-                if(response.getString(Constants.kResult).equals(Constants.kCentralState))
-                {
-                    JSONObject parameters = response.getJSONObject(Constants.kParams);
-                    String stateString = parameters.getString(Constants.kState);
-                    if(stateString.equals(Constants.kPoweredOff))
-                    {
-                        Intent enableBluetoothIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBluetoothIntent, 1);
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
             if (webSocket != null)
             {
                 try {

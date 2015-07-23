@@ -19,7 +19,7 @@
     <div class="pull" style="display:none">Pull down</div>
     <div class="PullToRefresh">
         <div class="iscroll-scroller">
-            <div class="iscroll-content"> <a ng-repeat="peripheral in gattip.peripherals | orderObjectBy:'rssi':false" >
+            <div class="iscroll-content"> <a ng-repeat="peripheral in gattip.peripherals | orderObjectBy:'rssi':flag" >
                 <div class="row listview" >
                     <div class="col-lg-1 col-xs-1 col-sm-1 col-md-1 signal-strength">
                         <div class="row">
