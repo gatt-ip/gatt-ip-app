@@ -9,11 +9,9 @@
 [submodule "iOS/GATT-IP-LIB"]
 	path = iOS/GATT-IP-LIB
 	url = https://github.com/gatt-ip/gatt-ip-ios.git
-	branch = develop
+	branch = master
 [submodule "Android/GATT-IP-LIB"]
 	path = Android/GATT-IP-LIB
 	url = https://github.com/gatt-ip/gatt-ip-android.git
-	branch = develop
-[submodule "Android/master"]
-	path = Android/master
-	url = https://github.com/gatt-ip/gatt-ip-android
+	branch = master
+
