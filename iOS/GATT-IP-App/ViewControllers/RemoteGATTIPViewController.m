@@ -21,164 +21,82 @@
  THE SOFTWARE.
  */
 
-#import "GATTIP.h"
-#import "SRWebSocket.h"
 #import "LogViewController.h"
 #import "RemoteGATTIPViewController.h"
+#import "Reachability.h"
+#import "CoreWebSocket.h"
+#import "GATTIP.h"
 
-@interface RemoteGATTIPViewController () <GATTIPDelegate,SRWebSocketDelegate,UITextFieldDelegate>
-{
+@interface RemoteGATTIPViewController () <GATTIPDelegate> {
     GATTIPAppDelegate *appDelegate;
+    WebSocketRef webSocket;
 }
-@property (weak, nonatomic) IBOutlet UILabel *connectionStateLabel;
-@property(nonatomic, strong)GATTIP *gattip;
-@property(nonatomic, strong)SRWebSocket *srWebSocket;
+@property(nonatomic, strong) GATTIP *gattip;
 
 @end
-
 @implementation RemoteGATTIPViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
+    int portNumber = [_port intValue];
+    webSocket = WebSocketCreateWithHostAndPort(NULL,(__bridge CFStringRef)@"localhost",portNumber, (__bridge void *)(self));
     appDelegate = (GATTIPAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [_locationTextField setPlaceholder:@"ws://<hostname>:<port>"];
-    _locationTextField.delegate = self;
     _topHeader.backgroundColor = [self colorWithHexString:@"063b63"];
+    _gattip = [[GATTIP alloc] init];
+    [_gattip setDelegate:self];
+    
+    if (webSocket) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            webSocket->callbacks.didClientReadCallback = Callback1;
+        });
+    }
+}
+
+void Callback1 (WebSocketRef sockref, WebSocketClientRef client, CFStringRef value) {
+    if (!value) {
+        return;
+    }
+    NSLog(@"Request: %@",value);
+    NSString *stringValue = (__bridge NSString *)value ;
+    NSData *stringValueData = [stringValue dataUsingEncoding:NSUTF8StringEncoding];
+    [(__bridge GATTIP *)sockref->userInfo request:stringValueData];
+}
+
+- (void)request:(NSData *)gattipMesg {
+    [_gattip request:gattipMesg];
+}
+
+- (void)response:(NSData *)gattipMesg {
+    NSString  *responseString = [[NSString alloc]initWithData:gattipMesg encoding:NSUTF8StringEncoding];
+    NSLog(@"Response: %@",responseString);
+    WebSocketWriteWithString(webSocket, (__bridge CFStringRef)(responseString));
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [_locationTextField becomeFirstResponder];
-}
-
-#pragma mark TextFieldDelegate
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.view endEditing:YES];
-    [super touchesBegan:touches withEvent:event];
-}
-
--(BOOL)textFieldShouldReturn:(UITextField*)textField;
-{
-    [textField resignFirstResponder];
-    return YES;
-}
-
-- (IBAction)connectWebSocket:(id)sender
-{
-    NSString *state = _connectBtn.titleLabel.text;
-    if([state isEqualToString:@"Connect"])
-    {
-        if([_locationTextField.text isEqualToString:@""])
-        {
-            [appDelegate showAlert:@"Please enter Host Name or IP address." withTitle:@""];
-            return;
-        }
-        
-        if(![self validateUrl:_locationTextField.text])
-        {
-            [appDelegate showAlert:@"Invalid Address. Please enter a valid HOST or IP Address" withTitle:nil];
-            return;
-        }
-        
-        
-        if([appDelegate checkReachability] != NotReachable){
-            _srWebSocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:_locationTextField.text]];
-            _srWebSocket.delegate = self;
-            [_srWebSocket open];
-            
-            _gattip = [[GATTIP alloc] init];
-            [_gattip setDelegate:self];
-            
-            [UIApplication sharedApplication].idleTimerDisabled = YES;
-            
-        }else{
-            [appDelegate showAlert:@"There is no network, which is required to connect to the remote server." withTitle:@"No Network"];
-        }
-    } else if([state isEqualToString:@"Disconnect"])
-    {
-        [_srWebSocket close];
-        
-        [UIApplication sharedApplication].idleTimerDisabled = NO;
+    if([appDelegate checkReachability] == NotReachable) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Network" message:@"There is no network, which is required to connect to the remote server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
     }
+    [_portLbl setText: [NSString stringWithFormat:@"Port Number : %@",_port]];
+    [_ipAddrLbl setText:[NSString stringWithFormat:@"IP Address : %@",_ipAddr]];
+    [_portLbl setTextColor:[self colorWithHexString:@"063b63"]];
+    [_ipAddrLbl setTextColor:[self colorWithHexString:@"063b63"]];
 }
 
 - (IBAction)gotoLocal:(id)sender
 {
-    _srWebSocket.delegate = nil;
-    [_srWebSocket close];
-    _srWebSocket = nil;
+    WebSocketRelease(webSocket);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(IBAction)gotoLog:(id)sender
 {
-    NSArray *listOfHumanReadableValues =  [_gattip listOFResponseAndRequests];
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LogViewController *logViewController = (LogViewController *)[storyBoard instantiateViewControllerWithIdentifier:@"logVC"];
     logViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-    logViewController.logList = listOfHumanReadableValues;
     [self showViewController:logViewController sender:self];
-}
-
--(void)response:(NSData *)gattipMesg
-{
-    NSString *gattipResponse =  [[NSString alloc] initWithData:gattipMesg encoding:NSUTF8StringEncoding];
-    NSLog(@"Response: %@)", gattipResponse);
-    
-    if(_srWebSocket){
-        [_srWebSocket send:gattipResponse];
-    }
-}
-
-#pragma mark - _srWebSocketDelegate
-- (void)webSocketDidOpen:(SRWebSocket *)webSocket
-{
-    [_connectBtn setTitle:@"Disconnect" forState:UIControlStateNormal];
-    [_connectBtn setTitleColor:[self colorWithHexString:@"F78F1E"] forState:UIControlStateNormal];
-}
-
-- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error
-{
-    _srWebSocket = nil;
-    _gattip = nil;
-    
-    [appDelegate showAlert:@"An error occured. Please try again." withTitle:nil];
-
-    [_connectBtn setTitle:@"Connect" forState:UIControlStateNormal];
-    [_connectBtn setTitleColor:[self colorWithHexString:@"005cff"] forState:UIControlStateNormal];
-}
-
-- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message
-{
-    NSLog(@"Request: %@", message);
-    if(_gattip) {
-        [_gattip request:[(NSString*)message dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-}
-
-- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean
-{
-    _srWebSocket = nil;
-    _gattip = nil;
-    
-    UIAlertView *alertMessage = [ [UIAlertView alloc] initWithTitle:nil
-                                                            message:@"Conection Closed."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-    [alertMessage show];
-    
-    [_connectBtn setTitle:@"Connect" forState:UIControlStateNormal];
-    [_connectBtn setTitleColor:[self colorWithHexString:@"005cff"] forState:UIControlStateNormal];
-}
-
--(BOOL)validateUrl:(NSString *)candidate
-{
-    NSString *regexString = @"(ws|wss)://((\\w)*|([0-9]*)|([-|_])*)+([\\.|:]((\\w)*|([0-9]*)|([-|_])*))+";
-    NSPredicate *urlTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
-    return [urlTest evaluateWithObject:candidate];
 }
 
 #pragma mark - color code to string

@@ -20,22 +20,17 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import com.crashlytics.android.Crashlytics;
-
 import org.gatt_ip.BluetoothService;
 import org.gatt_ip.GATTIP;
 import org.gatt_ip.GATTIPListener;
 import org.gatt_ip.activity.R;
 import org.java_websocket.WebSocket;
-import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -43,14 +38,14 @@ import java.util.Random;
 import io.fabric.sdk.android.Fabric;
 
 public class LocalGATTIPActivity extends Activity {
-    StartServerTask task;
+
     private WebView mWebview;
     private Context ctx;
     public static LocalGATTIPActivity lActivity;
-    WebSocketServer server;
+    static WebSocketServer server;
     public GATTIP gattip;
+    StartServerTask task;
 
-    //@SuppressLint("SetJavaScriptEnabled")
     @JavascriptInterface
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,10 +54,7 @@ public class LocalGATTIPActivity extends Activity {
         setContentView(R.layout.local_gattip);
         ctx = this;
         lActivity = this;
-
-        initializeViews();
-        // create websocket server on background,because network socket and
-        // main application not run on the same thread
+        gattip = new GATTIP(ctx);
         task = new StartServerTask();
         try {
             // Async task to start web socket server
@@ -74,6 +66,7 @@ public class LocalGATTIPActivity extends Activity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        initializeViews();
         // adding web view to show html files
         WebSettings settings = mWebview.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -89,6 +82,17 @@ public class LocalGATTIPActivity extends Activity {
         // load web view by using html file to establish connection with server
         // here web view treated as web socket client
         mWebview.loadUrl("file:///android_asset/www/index.html");
+
+    }
+
+    private class StartServerTask extends AsyncTask<String, Object, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            int portNumber = WebsocketService.generateRandomPort();
+            server = new WebsocketService(new InetSocketAddress("localhost", portNumber), ctx);
+            server.start();
+            return "";
+        }
     }
 
     @Override
@@ -99,16 +103,20 @@ public class LocalGATTIPActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("LocalGATTIPActivity","disconnect stick");
 
         if(gattip != null) {
             ArrayList<BluetoothGatt> connectedDevices = gattip.getConnectedDevices();
 
             if (connectedDevices != null) {
+                Log.d("connected devices", "" + connectedDevices.size());
+
                 for (BluetoothGatt gatt : connectedDevices) {
                     gatt.disconnect();
                 }
             }
         }
+
         if(server != null) {
             try {
                 server.stop();
@@ -124,17 +132,14 @@ public class LocalGATTIPActivity extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){
-            switch(keyCode)
-            {
+            switch(keyCode) {
                 case KeyEvent.KEYCODE_BACK:
-                    if(mWebview.canGoBack())
-                    {
+                    if(mWebview.canGoBack()) {
                         mWebview.goBack();
                     }else{
                         showAlert();
@@ -181,34 +186,14 @@ public class LocalGATTIPActivity extends Activity {
 	}
 */
 
-    private class StartServerTask extends AsyncTask<String, Object, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            int portNumber = generateRandomPort();
-            server = new GATTIPServer(new InetSocketAddress("localhost", portNumber), ctx);
-            server.start();
-            return "";
-        }
-    }
 
-    public int generateRandomPort() {
-        Random random = new Random();
-        int min = 1024;
-        int max = 10024;
-        int portNumber = random.nextInt(max-min+1) + min;
-        if(portNumber < 1024 || portNumber > 65000)
-            generateRandomPort();
-        return portNumber;
-    }
-
-    private class MyWebViewClient extends WebViewClient {
+     private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.contains("remoteview"))
-            {
+            if(url.contains("remoteview")) {
+                ctx.stopService(new Intent(ctx, BluetoothService.class));
                 gotoRemote();
-            } else if(url.contains("logview"))
-            {
+            } else if(url.contains("logview")) {
                 gotoLog();
             }
             return true;
@@ -217,33 +202,34 @@ public class LocalGATTIPActivity extends Activity {
         @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
         public void onPageFinished (WebView view, String url) {
-            int port = server.getPort();
-            Log.v("port number",""+port);
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                // In KitKat+ you should use the evaluateJavascript method
-                view.evaluateJavascript("connectWithPort("+port+")", new ValueCallback<String>() {
-                    @Override
-                    public void onReceiveValue(String s) {
-                        JsonReader reader = new JsonReader(new StringReader(s));
-                        // Must set lenient to parse single values
-                        reader.setLenient(true);
-                        try {
-                            if(reader.peek() != JsonToken.NULL) {
-                                if(reader.peek() == JsonToken.STRING) {
-                                    reader.nextString();
+            if(server != null) {
+                int port = server.getPort();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    // In KitKat+ you should use the evaluateJavascript method
+                    view.evaluateJavascript("connectWithPort(" + port + ")", new ValueCallback<String>() {
+                        @Override
+                        public void onReceiveValue(String s) {
+                            JsonReader reader = new JsonReader(new StringReader(s));
+                            // Must set lenient to parse single values
+                            reader.setLenient(true);
+                            try {
+                                if (reader.peek() != JsonToken.NULL) {
+                                    if (reader.peek() == JsonToken.STRING) {
+                                        reader.nextString();
+                                    }
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } finally {
+                                try {
+                                    reader.close();
+                                } catch (IOException e) {
+
                                 }
                             }
-                        } catch (IOException e) {
-                            Log.e("TAG", "MainActivity: IOException", e);
-                        } finally {
-                            try {
-                                reader.close();
-                            } catch (IOException e) {
-
-                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 
@@ -254,7 +240,7 @@ public class LocalGATTIPActivity extends Activity {
 
         public void gotoLog() {
             Intent intent = new Intent(ctx, LogView.class);
-            StringBuilder logCat = new StringBuilder();;
+            StringBuilder logCat = new StringBuilder();
             List<JSONObject> previousRequests = null;
             if(gattip != null) {
                 previousRequests = gattip.listOFResponseAndRequests();
@@ -267,68 +253,10 @@ public class LocalGATTIPActivity extends Activity {
                     logCat.append(System.getProperty("line.separator"));
                 }
                 intent.putExtra("logCat", new String(logCat));
-            }else
+            } else {
                 intent.putExtra("logCat", "");
+            }
             startActivity(intent);
         }
     }
-
-    public class GATTIPServer extends WebSocketServer implements GATTIPListener {
-        private WebSocket webSocket;
-        public GATTIPServer(InetSocketAddress address, Context ctx) {
-            super(address);
-            Log.v("socket address",""+address);
-            gattip = new GATTIP(ctx);
-            gattip.setGATTIPListener(this);
-        }
-
-        public GATTIPServer(Context ctx) throws UnknownHostException {
-            super();
-            gattip = new GATTIP(ctx);
-            gattip.setGATTIPListener(this);
-        }
-
-        //call when user wants to close connection with client
-        @Override
-        public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-            Log.v("GATTIPServer onClose","closed " + conn.getRemoteSocketAddress() + " with exit code " + code + " additional info: " + reason);
-        }
-
-        //method called when we got any interruption on connection
-        @Override
-        public void onError(WebSocket conn, Exception ex) {
-            if(webSocket != null)
-                webSocket = null;
-            Log.v("GATTIPServer onError","closed "+ex.getMessage());
-        }
-
-        //method called when we got request from client
-        @Override
-        public void onMessage(WebSocket conn, String message) {
-            if(webSocket != null)
-                webSocket = null;
-            Log.v("GATTIPServer","received message from " + conn.getRemoteSocketAddress() + ": " + message);
-            webSocket = conn;
-            gattip.request(message);
-        }
-
-        //method called when we got connection request from client
-        @Override
-        public void onOpen(WebSocket conn, ClientHandshake handShake) {
-            Log.v("GATTIPServer","connection to " + conn.getRemoteSocketAddress());
-        }
-
-        @Override
-        public void response(String gattipMsg) {
-            if (webSocket != null)
-            {
-                try {
-                    webSocket.send(gattipMsg);
-                } catch (Exception ec) {
-                    ec.printStackTrace();
-                }
-            }
-        }
-    }
-
 }

@@ -20,6 +20,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:text="@string/email"
+            android:textAllCaps="false"
             android:textColor="@color/bgblue"
             android:textSize="@dimen/text_size" />
         <ImageView
@@ -38,6 +39,7 @@
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
             android:text="@string/close"
+            android:textAllCaps="false"
             android:textColor="@color/bgblue"
             android:textSize="@dimen/text_size" />  
     </RelativeLayout>

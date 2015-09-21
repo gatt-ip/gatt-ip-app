@@ -26,10 +26,13 @@
 
 @interface RemoteGATTIPViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UITextField *locationTextField;
-@property (weak, nonatomic) IBOutlet UIButton *connectBtn;
 @property (weak, nonatomic) IBOutlet UIView *topHeader;
 
 -(IBAction)gotoLog:(id)sender;
+@property (weak, nonatomic) IBOutlet UILabel *portLbl;
+@property (weak, nonatomic) IBOutlet UILabel *ipAddrLbl;
+
+@property NSString *port;
+@property NSString *ipAddr;
 
 @end

@@ -20,7 +20,8 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  */
-
+#include <ifaddrs.h>
+#include <arpa/inet.h>
 #import "GATTIP.h"
 #import "CoreWebSocket.h"
 #import "LogViewController.h"
@@ -77,10 +78,39 @@ void Callback (WebSocketRef sockref, WebSocketClientRef client, CFStringRef valu
 }
 
 -(void)gotoRemote {
+    NSString *port = [NSString stringWithFormat:@"%d", WebSocketGetPort(webSocket)];
     UIStoryboard *mystoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     RemoteGATTIPViewController *remoteVC = [mystoryboard instantiateViewControllerWithIdentifier:@"123"];
     remoteVC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    remoteVC.port = port;
+    remoteVC.ipAddr = [self getIPAddress];
     [self presentViewController:remoteVC animated:YES completion:nil];
+}
+
+- (NSString *)getIPAddress {
+    NSString *address = @"error";
+    struct ifaddrs *interfaces = NULL;
+    struct ifaddrs *temp_addr = NULL;
+    int success = 0;
+    // retrieve the current interfaces - returns 0 on success
+    success = getifaddrs(&interfaces);
+    if (success == 0) {
+        // Loop through linked list of interfaces
+        temp_addr = interfaces;
+        while(temp_addr != NULL) {
+            if(temp_addr->ifa_addr->sa_family == AF_INET) {
+                // Check if interface is en0 which is the wifi connection on the iPhone
+                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"]) {
+                    // Get NSString from C String
+                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+                }
+            }
+            temp_addr = temp_addr->ifa_next;
+        }
+    }
+    // Free memory
+    freeifaddrs(interfaces);
+    return address;
 }
 
 - (void)gotoLog {
