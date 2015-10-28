@@ -1,8 +1,6 @@
 package org.gatt_ip.app;
 
 import android.app.Activity;
-
-import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.Intent;
 import android.content.BroadcastReceiver;
@@ -19,7 +17,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 
-import org.gatt_ip.BluetoothService;
+import org.gatt_ip.BluetoothLEService;
 import org.gatt_ip.GATTIP;
 import org.gatt_ip.activity.R;
 import org.java_websocket.WebSocket;
@@ -48,11 +46,17 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.remote_gattip);
         ctx = getApplicationContext();
+        Helper.configure();
         initializeViews();
         setListenersToViews();
         getIPAddress();
         ctx.registerReceiver(this.wifiInfoReciever, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
         gattip = new GATTIP(ctx);
+
+        this.bindService(new Intent(this.getApplicationContext(), BluetoothLEService.class), gattip, 0);
+        this.startService(new Intent(this.getApplicationContext(), BluetoothLEService.class));
+
 
         task = new StartServerTask();
         try {
@@ -110,7 +114,7 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener{
             if(WebsocketService.webSocket != null)
                 WebsocketService.webSocket.close(WebsocketService.webSocket.getLocalSocketAddress().getPort());
 
-            ctx.stopService(new Intent(ctx, BluetoothService.class));
+            ctx.stopService(new Intent(ctx, BluetoothLEService.class));
 
             gotoLocal();
         } else if (id == R.id.logBtn) {
@@ -123,22 +127,12 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener{
         super.onDestroy();
         Log.d("RemoteGATTIPActivity","disconnect stick");
 
-        if(gattip != null) {
-            ArrayList<BluetoothGatt> connectedDevices = gattip.getConnectedDevices();
-
-            if (connectedDevices != null) {
-                Log.d("connected devices", "" + connectedDevices.size());
-
-                for (BluetoothGatt gatt : connectedDevices) {
-                    gatt.disconnect();
-                }
-            }
-        }
+        unbindService(gattip);
 
         stopServer();
 
         try {
-            ctx.stopService(new Intent(ctx, BluetoothService.class));
+            ctx.stopService(new Intent(ctx, BluetoothLEService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,9 +148,7 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener{
         Intent intent = new Intent(ctx, LogView.class);
         StringBuilder logCat = new StringBuilder();
         List<JSONObject> previousRequests = null;
-        if (gattip != null) {
-            previousRequests = gattip.listOFResponseAndRequests();
-        }
+        previousRequests = Helper.listOFResponseAndRequests();
         if (previousRequests != null && previousRequests.size() > 0) {
             for (int i = 0; i < previousRequests.size(); i++) {
                 logCat.append(previousRequests.get(i));

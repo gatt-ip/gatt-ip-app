@@ -26,18 +26,19 @@
 #import "Reachability.h"
 #import "CoreWebSocket.h"
 #import "GATTIP.h"
+#import "Logs.h"
 
 @interface RemoteGATTIPViewController () <GATTIPDelegate> {
     GATTIPAppDelegate *appDelegate;
     WebSocketRef webSocket;
+    Logs *logs;
 }
 @property(nonatomic, strong) GATTIP *gattip;
-
 @end
 @implementation RemoteGATTIPViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    logs = [Logs sharedSingleton];
     int portNumber = [_port intValue];
     webSocket = WebSocketCreateWithHostAndPort(NULL,(__bridge CFStringRef)@"localhost",portNumber, (__bridge void *)(self));
     appDelegate = (GATTIPAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -63,10 +64,12 @@ void Callback1 (WebSocketRef sockref, WebSocketClientRef client, CFStringRef val
 }
 
 - (void)request:(NSData *)gattipMesg {
+    [logs addMessagesToLog:gattipMesg];
     [_gattip request:gattipMesg];
 }
 
 - (void)response:(NSData *)gattipMesg {
+    [logs addMessagesToLog:gattipMesg];
     NSString  *responseString = [[NSString alloc]initWithData:gattipMesg encoding:NSUTF8StringEncoding];
     NSLog(@"Response: %@",responseString);
     WebSocketWriteWithString(webSocket, (__bridge CFStringRef)(responseString));

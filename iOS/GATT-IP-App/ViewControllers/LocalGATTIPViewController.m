@@ -27,10 +27,12 @@
 #import "LogViewController.h"
 #import "LocalGATTIPViewController.h"
 #import "RemoteGATTIPViewController.h"
+#import "Logs.h"
 
 @interface LocalGATTIPViewController() <GATTIPDelegate> {
 
     WebSocketRef webSocket;
+    Logs *logs;
 }
 
 @property(nonatomic, strong) GATTIP *gattip;
@@ -39,9 +41,11 @@
 
 @implementation LocalGATTIPViewController
 
+
+
 - (void)viewDidLoad {
-    [super viewDidLoad]; 
-    
+    [super viewDidLoad];
+    logs = [Logs sharedSingleton];
     webSocket = WebSocketCreate(NULL, (__bridge void *)(self));
     if (webSocket) {
         NSURL *indexURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:@"www"]];
@@ -68,16 +72,18 @@ void Callback (WebSocketRef sockref, WebSocketClientRef client, CFStringRef valu
 }
 
 - (void)request:(NSData *)gattipMesg {
+    [logs addMessagesToLog:gattipMesg];
     [_gattip request:gattipMesg];
 }
 
 - (void)response:(NSData *)gattipMesg {
+    [logs addMessagesToLog:gattipMesg];
     NSString  *responseString = [[NSString alloc]initWithData:gattipMesg encoding:NSUTF8StringEncoding];
     NSLog(@"Response: %@",responseString);
     WebSocketWriteWithString(webSocket, (__bridge CFStringRef)(responseString));
 }
 
--(void)gotoRemote {
+- (void)gotoRemote {
     NSString *port = [NSString stringWithFormat:@"%d", WebSocketGetPort(webSocket)];
     UIStoryboard *mystoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     RemoteGATTIPViewController *remoteVC = [mystoryboard instantiateViewControllerWithIdentifier:@"123"];
@@ -114,7 +120,7 @@ void Callback (WebSocketRef sockref, WebSocketClientRef client, CFStringRef valu
 }
 
 - (void)gotoLog {
-    NSArray *listOfHumanReadableValues =  [_gattip listOFResponseAndRequests];
+    NSArray *listOfHumanReadableValues =  [logs listOFResponseAndRequests];
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     LogViewController *logViewController = (LogViewController *)[storyBoard instantiateViewControllerWithIdentifier:@"logVC"];
     logViewController.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;

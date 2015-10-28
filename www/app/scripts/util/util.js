@@ -11,10 +11,10 @@ function Util() {
         } else {
             peripheral.image = "images/signal_1@2x.png";
         }
-
+        
         return peripheral;
     };
-
+    
     this.hex2a = function(hexx) {
         var str = '';
         if (hexx) {
@@ -24,7 +24,7 @@ function Util() {
         }
         return str;
     };
-
+    
     this.hex2dec = function(hexx) {
         var str = '';
         if (hexx) {
@@ -32,12 +32,12 @@ function Util() {
         }
         return str;
     };
-
+    
     this.hex2b = function(hexx) {
         var num = hex2i(hexx);
         return num.toString(2);
     };
-
+    
     this.a2hex = function(asci) {
         var str = '';
         for (a = 0; a < asci.length; a++) {
@@ -45,7 +45,15 @@ function Util() {
         }
         return str;
     };
-
+    
+    this.a2dec = function(asci) {
+        var str = '';
+        for (a = 0; a < asci.length; a++) {
+            str = str + asci.charCodeAt(a);
+        }
+        return str;
+    };
+    
     this.dec2hex = function(d) {
         var hex = Number(d).toString(16);
         while (hex.length < 2) {
@@ -53,20 +61,24 @@ function Util() {
         }
         return hex;
     };
-
+    
+    this.dec2a = function(d) {
+        return hex2a(dec2hex(d));
+    };
+    
     this.show_alert = function(message) {
         $('#customalert').addClass('alert-show');
         $('.alert-box').show();
-
+        
         // display the message
         $('#alertmessage').html(message);
     };
-
+    
     this.hide_alert = function() {
         $('#customalert').removeClass('alert-show');
         $('.alert-box').hide();
     };
-
+    
     return this;
 }
 

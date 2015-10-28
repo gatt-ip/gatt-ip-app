@@ -9,22 +9,31 @@ function connectWithPort(port) {
 app.factory('gattip', ['$q', '$rootScope', '$location',
     function($q, $rootScope, $location) {
         var util = Util();
-
+        var isFirstTime = true;
         var g = new GATTIP();
         g.init(url);
 
         g.oninit = function(params, error) {
             g.configure(true);
         };
-
+        g.onconfigure = function (params, error) {
+            g.centralState();
+        };
         g.onstate = function(error) {
             if (g.state === GATTIP.kPoweredOn) {
                 g.scan(true);
             } else if (g.state === GATTIP.kPoweredOff) {
-                $rootScope.$apply(function() {
-                    $location.path('/devicelist');
-                    util.show_alert("Please turn on Bluetooth to scan peripherals.");
-                });
+                setTimeout(function() {
+                    g.centralState();
+                }, 3000);
+                       
+                if(isFirstTime) {
+                    $rootScope.$apply(function() {
+                        $location.path('/devicelist');
+                        util.show_alert("Please turn on Bluetooth to scan peripherals.");
+                    });
+                    isFirstTime = false;
+                }
             } else if (g.state === GATTIP.kUnsupported) {
                 util.show_alert("Bluetooth Low Energy is not supported with this device.");
             } else {

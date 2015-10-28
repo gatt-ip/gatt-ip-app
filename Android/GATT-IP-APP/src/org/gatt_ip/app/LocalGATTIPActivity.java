@@ -21,19 +21,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.crashlytics.android.Crashlytics;
-import org.gatt_ip.BluetoothService;
+
+import org.gatt_ip.BluetoothLEService;
 import org.gatt_ip.GATTIP;
-import org.gatt_ip.GATTIPListener;
 import org.gatt_ip.activity.R;
-import org.java_websocket.WebSocket;
 import org.java_websocket.server.WebSocketServer;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -42,8 +39,7 @@ public class LocalGATTIPActivity extends Activity {
     private WebView mWebview;
     private Context ctx;
     public static LocalGATTIPActivity lActivity;
-    static WebSocketServer server;
-    public GATTIP gattip;
+    static WebsocketService server;
     StartServerTask task;
 
     @JavascriptInterface
@@ -52,10 +48,11 @@ public class LocalGATTIPActivity extends Activity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.local_gattip);
+
         ctx = this;
         lActivity = this;
-        gattip = new GATTIP(ctx);
         task = new StartServerTask();
+
         try {
             // Async task to start web socket server
             task = new StartServerTask();
@@ -66,7 +63,10 @@ public class LocalGATTIPActivity extends Activity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
         initializeViews();
+
+        Helper.configure();
         // adding web view to show html files
         WebSettings settings = mWebview.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -82,7 +82,6 @@ public class LocalGATTIPActivity extends Activity {
         // load web view by using html file to establish connection with server
         // here web view treated as web socket client
         mWebview.loadUrl("file:///android_asset/www/index.html");
-
     }
 
     private class StartServerTask extends AsyncTask<String, Object, String> {
@@ -103,21 +102,11 @@ public class LocalGATTIPActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("LocalGATTIPActivity","disconnect stick");
-
-        if(gattip != null) {
-            ArrayList<BluetoothGatt> connectedDevices = gattip.getConnectedDevices();
-
-            if (connectedDevices != null) {
-                Log.d("connected devices", "" + connectedDevices.size());
-
-                for (BluetoothGatt gatt : connectedDevices) {
-                    gatt.disconnect();
-                }
-            }
-        }
+        Log.d("LocalGATTIPActivity", "disconnect stick");
 
         if(server != null) {
+            unbindService(server.gattip);
+
             try {
                 server.stop();
             } catch (IOException ie) {
@@ -128,7 +117,7 @@ public class LocalGATTIPActivity extends Activity {
         }
 
         try {
-            ctx.stopService(new Intent(ctx, BluetoothService.class));
+            ctx.stopService(new Intent(ctx, BluetoothLEService.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,12 +130,13 @@ public class LocalGATTIPActivity extends Activity {
                 case KeyEvent.KEYCODE_BACK:
                     if(mWebview.canGoBack()) {
                         mWebview.goBack();
-                    }else{
+                    } else {
                         showAlert();
                     }
                     return true;
             }
         }
+
         return super.onKeyDown(keyCode, event);
     }
 
@@ -191,7 +181,7 @@ public class LocalGATTIPActivity extends Activity {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if(url.contains("remoteview")) {
-                ctx.stopService(new Intent(ctx, BluetoothService.class));
+                ctx.stopService(new Intent(ctx, BluetoothLEService.class));
                 gotoRemote();
             } else if(url.contains("logview")) {
                 gotoLog();
@@ -242,9 +232,8 @@ public class LocalGATTIPActivity extends Activity {
             Intent intent = new Intent(ctx, LogView.class);
             StringBuilder logCat = new StringBuilder();
             List<JSONObject> previousRequests = null;
-            if(gattip != null) {
-                previousRequests = gattip.listOFResponseAndRequests();
-            }
+            previousRequests = Helper.listOFResponseAndRequests();
+
             if(previousRequests != null && previousRequests.size() > 0) {
                 for(int i=0 ; i<previousRequests.size();i++) {
                     logCat.append(previousRequests.get(i));
@@ -255,6 +244,7 @@ public class LocalGATTIPActivity extends Activity {
                 intent.putExtra("logCat", new String(logCat));
             } else {
                 intent.putExtra("logCat", "");
+
             }
             startActivity(intent);
         }

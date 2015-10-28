@@ -1,125 +1,128 @@
 app.controller('devicelistController', ['$scope', 'gattip', function($scope, gattip) {
-    $scope.gattip = gattip;
-    setTimeout(function() {
-        $scope.flag = true;
-    }, 30 * 1000);
-    $scope.flag = false;
-    $scope.showData = function(peripheral) {
-        $scope.showformat = 0;
-        showdata(peripheral);
-        $scope.manufacturerData = peripheral.manufacturerData;
-        $scope.rawAdvertisingData = peripheral.rawAdvertisingData;
-        $scope.peripheral1 = peripheral;
-    };
+	$scope.gattip = gattip;
+	setTimeout(function() {
+		$scope.flag = true;
+	}, 30 * 1000);
+	$scope.flag = false;
+	var dataformat = "0";
+	$scope.showformat = "0";
+	$scope.showData = function(peripheral) {
+		$scope.peripheralId = peripheral.uuid;
+		$scope.selectedPeripheral = peripheral;
+		updateADVData(dataformat);
+	};
 
-    $scope.changeDataFormat = function(position) {
-        var util = Util();
-        showdata($scope.peripheral1);
-        switch (position.showformat) {
-            case "1":
-                $scope.manufacturerData = util.hex2a($scope.peripheral1.manufacturerData);
-                $scope.rawAdvertisingData = util.hex2a($scope.peripheral1.rawAdvertisingData);
-                break;
-            case "2":
-                $scope.manufacturerData = util.hex2dec($scope.peripheral1.manufacturerData);
-                $scope.rawAdvertisingData = util.hex2dec($scope.peripheral1.rawAdvertisingData);
-                break;
-            default:
-                $scope.manufacturerData = $scope.peripheral1.manufacturerData;
-                $scope.rawAdvertisingData = $scope.peripheral1.rawAdvertisingData;
-                break;
-        }
-    };
+	$scope.$watch('gattip.peripherals', function(newPeripherals, oldPheripherals) {
+		for (var newPeripheral in newPeripherals) {
+			if (newPeripherals[newPeripheral].uuid == $scope.peripheralId) {
+				$scope.showData(newPeripherals[newPeripheral]);
+			}
+		}
+	}, true);
 
-    function showdata(peripheral) {
-        $scope.name = peripheral.name;
-        $scope.uuid = peripheral.uuid;
-        $scope.discoverable = peripheral.discoverable;
-        $scope.txpowerLevel = peripheral.txpowerLevel;
-        $scope.serviceUUIDs = peripheral.serviceUUIDs;
-        $scope.rssi = peripheral.rssi;
-    }
+	$scope.changeDataFormat = function(position) {
+		dataformat = position.showformat;
+		updateADVData(dataformat);
+	};
 
-    $scope.connectPeripheral = function(peripheral) {
-        gattip.stopScan();
-        setTimeout(function() {
-            peripheral.connect();
-        }, 500);
-    };
+	function updateADVData(format) {
+		var util = Util();
+		switch (format) {
+			case "1":
+				$scope.manufacturerData = util.hex2a($scope.selectedPeripheral.manufacturerData);
+				$scope.rawAdvertisingData = util.hex2a($scope.selectedPeripheral.rawAdvertisingData);
+				break;
+			case "2":
+				$scope.manufacturerData = util.hex2dec($scope.selectedPeripheral.manufacturerData);
+				$scope.rawAdvertisingData = util.hex2dec($scope.selectedPeripheral.rawAdvertisingData);
+				break;
+			default:
+				$scope.manufacturerData = $scope.selectedPeripheral.manufacturerData;
+				$scope.rawAdvertisingData = $scope.selectedPeripheral.rawAdvertisingData;
+				break;
+		}
+	}
 
-    $scope.gotoremoteview = function() {
-        window.location = 'gatt-ip://remoteview';
-    };
+	$scope.connectPeripheral = function(peripheral) {
+		gattip.stopScan();
+		setTimeout(function() {
+			peripheral.connect();
+		}, 500);
+	};
 
-    $scope.gotologview = function() {
-        window.location = 'gatt-ip://logview';
-    };
+	$scope.gotoremoteview = function() {
+		window.location = 'gatt-ip://remoteview';
+	};
 
-    //////////////////////////////
-    // pull to refresh functionality start here
-    $(document).ready(function() {
+	$scope.gotologview = function() {
+		window.location = 'gatt-ip://logview';
+	};
 
-        var contents = $('.PullToRefresh');
-        var refresh = false;
-        var track = false;
-        var doc = document.documentElement;
-        var startY;
-        var top;
-        var left;
-        var page;
+	//////////////////////////////
+	// pull to refresh functionality start here
+	$(document).ready(function() {
 
-        $.each(contents, function(index, currentElement) {
-            currentElement.addEventListener('touchstart', function(e) {
-                $('.pull').hide();
-                contentStartY = $('.iscroll-scroller').position().top;
-                startY = e.touches[0].screenY;
-                console.log(startY);
-                left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-                top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-            });
+		var contents = $('.PullToRefresh');
+		var refresh = false;
+		var track = false;
+		var doc = document.documentElement;
+		var startY;
+		var top;
+		var left;
+		var page;
 
-            currentElement.addEventListener('touchend', function(e) {
-                $('.pull').html('Pull Down').hide();
-                if (refresh) {
-                    $scope.flag = false;
-                    setTimeout(function() {
-                        $scope.flag = true;
-                    }, 30 * 1000);
+		$.each(contents, function(index, currentElement) {
+			currentElement.addEventListener('touchstart', function(e) {
+				$('.pull').hide();
+				contentStartY = $('.iscroll-scroller').position().top;
+				startY = e.touches[0].screenY;
+				console.log(startY);
+				left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+				top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+			});
 
-                    currentElement.style['-webkit-transition-duration'] = '.5s';
-                    $scope.$apply(function() {
-                        gattip.peripherals = {};
-                    });
-                    gattip.scan(true);
-                    currentElement.addEventListener('transitionEnd', removeTransition);
-                    refresh = false;
-                }
-            });
+			currentElement.addEventListener('touchend', function(e) {
+				$('.pull').html('Pull Down').hide();
+				if (refresh) {
+					$scope.flag = false;
+					setTimeout(function() {
+						$scope.flag = true;
+					}, 30 * 1000);
 
-            currentElement.addEventListener('touchmove', function(e) {
-                if (top === 0) {
-                    if (e.changedTouches[0].screenY - startY > 15) {
-                        e.preventDefault();
-                        $('.pull').html('Pull Down').show();
-                    }
-                    if (top === 0 && (e.changedTouches[0].screenY - startY > 80) && contentStartY >= 0) {
-                        $('.pull').html('Release to Refresh').show();
-                        refresh = true;
-                    } else {
-                        refresh = false;
-                        return false;
-                    }
-                }
-            });
+					currentElement.style['-webkit-transition-duration'] = '.5s';
+					$scope.$apply(function() {
+						gattip.peripherals = {};
+					});
+					gattip.scan(true);
+					currentElement.addEventListener('transitionEnd', removeTransition);
+					refresh = false;
+				}
+			});
 
-            var removeTransition = function() {
-                content.style['-webkit-transition-duration'] = 0;
-            };
-        });
-        document.addEventListener('touchend', function() {
-            $('.pull').html('Pull down').hide();
-        }, false);
-    });
-    // PULL TO REFRESH ENDS HERE
+			currentElement.addEventListener('touchmove', function(e) {
+				if (top === 0) {
+					if (e.changedTouches[0].screenY - startY > 15) {
+						e.preventDefault();
+						$('.pull').html('Pull Down').show();
+					}
+					if (top === 0 && (e.changedTouches[0].screenY - startY > 80) && contentStartY >= 0) {
+						$('.pull').html('Release to Refresh').show();
+						refresh = true;
+					} else {
+						refresh = false;
+						return false;
+					}
+				}
+			});
+
+			var removeTransition = function() {
+				content.style['-webkit-transition-duration'] = 0;
+			};
+		});
+		document.addEventListener('touchend', function() {
+			$('.pull').html('Pull down').hide();
+		}, false);
+	});
+	// PULL TO REFRESH ENDS HERE
 
 }]);

@@ -58,6 +58,7 @@ app.controller('descriptorlistController', ['$scope', 'gattip', function($scope,
 
     $scope.readformat = 0;
     $scope.writeformat = 0;
+    $scope.writeIndex = $scope.writeformat;
 
     $scope.$watch('gattip.currentCharacteristic.value', updateCurrentValue);
 
@@ -79,6 +80,36 @@ app.controller('descriptorlistController', ['$scope', 'gattip', function($scope,
                 break;
         }
     }
+
+    $scope.changeDataFormat = function() {
+        var dataFormat = parseInt($scope.writeformat);
+        if ($scope.writeIndex != dataFormat) {
+            switch ($scope.writeformat) {
+                case "0":
+                    if ($scope.writeIndex == 1) {
+                        $scope.inputs = util.a2hex($scope.inputs);
+                    } else {
+                        $scope.inputs = util.dec2hex($scope.inputs);
+                    }
+                    break;
+                case "1":
+                    if ($scope.writeIndex === 0) {
+                        $scope.inputs = util.hex2a($scope.inputs);
+                    } else {
+                        $scope.inputs = util.dec2a($scope.inputs);
+                    }
+                    break;
+                case "2":
+                    if ($scope.writeIndex === 0) {
+                        $scope.inputs = util.hex2dec($scope.inputs);
+                    } else {
+                        $scope.inputs = util.a2dec($scope.inputs);
+                    }
+                    break;
+            }
+        }
+        $scope.writeIndex = parseInt($scope.writeformat);
+    };
 
     $scope.writeValue = function() {
         if (!$scope.inputs) {
@@ -125,128 +156,131 @@ app.controller('descriptorlistController', ['$scope', 'gattip', function($scope,
     };
 }]);
 app.controller('devicelistController', ['$scope', 'gattip', function($scope, gattip) {
-    $scope.gattip = gattip;
-    setTimeout(function() {
-        $scope.flag = true;
-    }, 30 * 1000);
-    $scope.flag = false;
-    $scope.showData = function(peripheral) {
-        $scope.showformat = 0;
-        showdata(peripheral);
-        $scope.manufacturerData = peripheral.manufacturerData;
-        $scope.rawAdvertisingData = peripheral.rawAdvertisingData;
-        $scope.peripheral1 = peripheral;
-    };
+	$scope.gattip = gattip;
+	setTimeout(function() {
+		$scope.flag = true;
+	}, 30 * 1000);
+	$scope.flag = false;
+	var dataformat = "0";
+	$scope.showformat = "0";
+	$scope.showData = function(peripheral) {
+		$scope.peripheralId = peripheral.uuid;
+		$scope.selectedPeripheral = peripheral;
+		updateADVData(dataformat);
+	};
 
-    $scope.changeDataFormat = function(position) {
-        var util = Util();
-        showdata($scope.peripheral1);
-        switch (position.showformat) {
-            case "1":
-                $scope.manufacturerData = util.hex2a($scope.peripheral1.manufacturerData);
-                $scope.rawAdvertisingData = util.hex2a($scope.peripheral1.rawAdvertisingData);
-                break;
-            case "2":
-                $scope.manufacturerData = util.hex2dec($scope.peripheral1.manufacturerData);
-                $scope.rawAdvertisingData = util.hex2dec($scope.peripheral1.rawAdvertisingData);
-                break;
-            default:
-                $scope.manufacturerData = $scope.peripheral1.manufacturerData;
-                $scope.rawAdvertisingData = $scope.peripheral1.rawAdvertisingData;
-                break;
-        }
-    };
+	$scope.$watch('gattip.peripherals', function(newPeripherals, oldPheripherals) {
+		for (var newPeripheral in newPeripherals) {
+			if (newPeripherals[newPeripheral].uuid == $scope.peripheralId) {
+				$scope.showData(newPeripherals[newPeripheral]);
+			}
+		}
+	}, true);
 
-    function showdata(peripheral) {
-        $scope.name = peripheral.name;
-        $scope.uuid = peripheral.uuid;
-        $scope.discoverable = peripheral.discoverable;
-        $scope.txpowerLevel = peripheral.txpowerLevel;
-        $scope.serviceUUIDs = peripheral.serviceUUIDs;
-        $scope.rssi = peripheral.rssi;
-    }
+	$scope.changeDataFormat = function(position) {
+		dataformat = position.showformat;
+		updateADVData(dataformat);
+	};
 
-    $scope.connectPeripheral = function(peripheral) {
-        gattip.stopScan();
-        setTimeout(function() {
-            peripheral.connect();
-        }, 500);
-    };
+	function updateADVData(format) {
+		var util = Util();
+		switch (format) {
+			case "1":
+				$scope.manufacturerData = util.hex2a($scope.selectedPeripheral.manufacturerData);
+				$scope.rawAdvertisingData = util.hex2a($scope.selectedPeripheral.rawAdvertisingData);
+				break;
+			case "2":
+				$scope.manufacturerData = util.hex2dec($scope.selectedPeripheral.manufacturerData);
+				$scope.rawAdvertisingData = util.hex2dec($scope.selectedPeripheral.rawAdvertisingData);
+				break;
+			default:
+				$scope.manufacturerData = $scope.selectedPeripheral.manufacturerData;
+				$scope.rawAdvertisingData = $scope.selectedPeripheral.rawAdvertisingData;
+				break;
+		}
+	}
 
-    $scope.gotoremoteview = function() {
-        window.location = 'gatt-ip://remoteview';
-    };
+	$scope.connectPeripheral = function(peripheral) {
+		gattip.stopScan();
+		setTimeout(function() {
+			peripheral.connect();
+		}, 500);
+	};
 
-    $scope.gotologview = function() {
-        window.location = 'gatt-ip://logview';
-    };
+	$scope.gotoremoteview = function() {
+		window.location = 'gatt-ip://remoteview';
+	};
 
-    //////////////////////////////
-    // pull to refresh functionality start here
-    $(document).ready(function() {
+	$scope.gotologview = function() {
+		window.location = 'gatt-ip://logview';
+	};
 
-        var contents = $('.PullToRefresh');
-        var refresh = false;
-        var track = false;
-        var doc = document.documentElement;
-        var startY;
-        var top;
-        var left;
-        var page;
+	//////////////////////////////
+	// pull to refresh functionality start here
+	$(document).ready(function() {
 
-        $.each(contents, function(index, currentElement) {
-            currentElement.addEventListener('touchstart', function(e) {
-                $('.pull').hide();
-                contentStartY = $('.iscroll-scroller').position().top;
-                startY = e.touches[0].screenY;
-                console.log(startY);
-                left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
-                top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-            });
+		var contents = $('.PullToRefresh');
+		var refresh = false;
+		var track = false;
+		var doc = document.documentElement;
+		var startY;
+		var top;
+		var left;
+		var page;
 
-            currentElement.addEventListener('touchend', function(e) {
-                $('.pull').html('Pull Down').hide();
-                if (refresh) {
-                    $scope.flag = false;
-                    setTimeout(function() {
-                        $scope.flag = true;
-                    }, 30 * 1000);
+		$.each(contents, function(index, currentElement) {
+			currentElement.addEventListener('touchstart', function(e) {
+				$('.pull').hide();
+				contentStartY = $('.iscroll-scroller').position().top;
+				startY = e.touches[0].screenY;
+				console.log(startY);
+				left = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0);
+				top = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
+			});
 
-                    currentElement.style['-webkit-transition-duration'] = '.5s';
-                    $scope.$apply(function() {
-                        gattip.peripherals = {};
-                    });
-                    gattip.scan(true);
-                    currentElement.addEventListener('transitionEnd', removeTransition);
-                    refresh = false;
-                }
-            });
+			currentElement.addEventListener('touchend', function(e) {
+				$('.pull').html('Pull Down').hide();
+				if (refresh) {
+					$scope.flag = false;
+					setTimeout(function() {
+						$scope.flag = true;
+					}, 30 * 1000);
 
-            currentElement.addEventListener('touchmove', function(e) {
-                if (top === 0) {
-                    if (e.changedTouches[0].screenY - startY > 15) {
-                        e.preventDefault();
-                        $('.pull').html('Pull Down').show();
-                    }
-                    if (top === 0 && (e.changedTouches[0].screenY - startY > 80) && contentStartY >= 0) {
-                        $('.pull').html('Release to Refresh').show();
-                        refresh = true;
-                    } else {
-                        refresh = false;
-                        return false;
-                    }
-                }
-            });
+					currentElement.style['-webkit-transition-duration'] = '.5s';
+					$scope.$apply(function() {
+						gattip.peripherals = {};
+					});
+					gattip.scan(true);
+					currentElement.addEventListener('transitionEnd', removeTransition);
+					refresh = false;
+				}
+			});
 
-            var removeTransition = function() {
-                content.style['-webkit-transition-duration'] = 0;
-            };
-        });
-        document.addEventListener('touchend', function() {
-            $('.pull').html('Pull down').hide();
-        }, false);
-    });
-    // PULL TO REFRESH ENDS HERE
+			currentElement.addEventListener('touchmove', function(e) {
+				if (top === 0) {
+					if (e.changedTouches[0].screenY - startY > 15) {
+						e.preventDefault();
+						$('.pull').html('Pull Down').show();
+					}
+					if (top === 0 && (e.changedTouches[0].screenY - startY > 80) && contentStartY >= 0) {
+						$('.pull').html('Release to Refresh').show();
+						refresh = true;
+					} else {
+						refresh = false;
+						return false;
+					}
+				}
+			});
+
+			var removeTransition = function() {
+				content.style['-webkit-transition-duration'] = 0;
+			};
+		});
+		document.addEventListener('touchend', function() {
+			$('.pull').html('Pull down').hide();
+		}, false);
+	});
+	// PULL TO REFRESH ENDS HERE
 
 }]);
 app.controller('servicelistController', ['$scope', 'gattip', function($scope, gattip) {
@@ -279,22 +313,31 @@ function connectWithPort(port) {
 app.factory('gattip', ['$q', '$rootScope', '$location',
     function($q, $rootScope, $location) {
         var util = Util();
-
+        var isFirstTime = true;
         var g = new GATTIP();
         g.init(url);
 
         g.oninit = function(params, error) {
             g.configure(true);
         };
-
+        g.onconfigure = function (params, error) {
+            g.centralState();
+        };
         g.onstate = function(error) {
             if (g.state === GATTIP.kPoweredOn) {
                 g.scan(true);
             } else if (g.state === GATTIP.kPoweredOff) {
-                $rootScope.$apply(function() {
-                    $location.path('/devicelist');
-                    util.show_alert("Please turn on Bluetooth to scan peripherals.");
-                });
+                setTimeout(function() {
+                    g.centralState();
+                }, 3000);
+                       
+                if(isFirstTime) {
+                    $rootScope.$apply(function() {
+                        $location.path('/devicelist');
+                        util.show_alert("Please turn on Bluetooth to scan peripherals.");
+                    });
+                    isFirstTime = false;
+                }
             } else if (g.state === GATTIP.kUnsupported) {
                 util.show_alert("Bluetooth Low Energy is not supported with this device.");
             } else {
@@ -399,10 +442,10 @@ function Util() {
         } else {
             peripheral.image = "images/signal_1@2x.png";
         }
-
+        
         return peripheral;
     };
-
+    
     this.hex2a = function(hexx) {
         var str = '';
         if (hexx) {
@@ -412,7 +455,7 @@ function Util() {
         }
         return str;
     };
-
+    
     this.hex2dec = function(hexx) {
         var str = '';
         if (hexx) {
@@ -420,12 +463,12 @@ function Util() {
         }
         return str;
     };
-
+    
     this.hex2b = function(hexx) {
         var num = hex2i(hexx);
         return num.toString(2);
     };
-
+    
     this.a2hex = function(asci) {
         var str = '';
         for (a = 0; a < asci.length; a++) {
@@ -433,7 +476,15 @@ function Util() {
         }
         return str;
     };
-
+    
+    this.a2dec = function(asci) {
+        var str = '';
+        for (a = 0; a < asci.length; a++) {
+            str = str + asci.charCodeAt(a);
+        }
+        return str;
+    };
+    
     this.dec2hex = function(d) {
         var hex = Number(d).toString(16);
         while (hex.length < 2) {
@@ -441,20 +492,24 @@ function Util() {
         }
         return hex;
     };
-
+    
+    this.dec2a = function(d) {
+        return hex2a(dec2hex(d));
+    };
+    
     this.show_alert = function(message) {
         $('#customalert').addClass('alert-show');
         $('.alert-box').show();
-
+        
         // display the message
         $('#alertmessage').html(message);
     };
-
+    
     this.hide_alert = function() {
         $('#customalert').removeClass('alert-show');
         $('.alert-box').hide();
     };
-
+    
     return this;
 }
 

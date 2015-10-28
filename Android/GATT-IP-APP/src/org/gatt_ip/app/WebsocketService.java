@@ -7,18 +7,21 @@ import org.gatt_ip.GATTIPListener;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 
 /**
- * Created by Ansari on 24/08/2015.
+ * Created by Vensi on 24/08/2015.
  */
 public class WebsocketService extends WebSocketServer implements GATTIPListener {
-
-    GATTIP gattip;
     public static WebSocket webSocket;
+
     Context ctx;
+    public GATTIP gattip; // HACK public so that i can unbind.
 
     public WebsocketService(InetSocketAddress address, Context ctx) {
         super(address);
@@ -52,9 +55,14 @@ public class WebsocketService extends WebSocketServer implements GATTIPListener 
     @Override
     public void onMessage(WebSocket conn, String message) {
 
-        Log.v("GATTIPServer","received message from " + conn.getRemoteSocketAddress() + ": " + message);
+        Log.v("GATTIPServer","request message: " + message);
+        Helper.addMessagesToLog(message);
 
-        gattip.request(message);
+        try {
+            gattip.request(message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     //method called when we got connection request from client
@@ -66,8 +74,11 @@ public class WebsocketService extends WebSocketServer implements GATTIPListener 
 
     @Override
     public void response(String gattipMsg) {
+         Helper.addMessagesToLog(gattipMsg);
+
         if (webSocket != null) {
             try {
+                Log.v("GATTIPServer","response message: " + gattipMsg);
                 webSocket.send(gattipMsg);
             } catch (Exception ec) {
                 ec.printStackTrace();

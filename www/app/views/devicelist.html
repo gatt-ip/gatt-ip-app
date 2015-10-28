@@ -70,25 +70,69 @@
                                 <th style="width: 40%;">TYPE</th>
                                 <th>VALUE</th>
                             </tr>
-                            <tr>
+                            <tr ng-show="selectedPeripheral.rssi !== '' && selectedPeripheral.rssi !== undefined && selectedPeripheral.rssi !== null">
+                                <td class="text-wrap">RSSI</td>
+                                <td class="text-wrap">{{selectedPeripheral.rssi}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.discoverable !== '' && selectedPeripheral.discoverable !== undefined && selectedPeripheral.discoverable !== null">
                                 <td class="text-wrap">Discoverable Mode</td>
-                                <td class="text-wrap">{{discoverable}}</td>
+                                <td class="text-wrap">{{selectedPeripheral.discoverable}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="selectedPeripheral.serviceUUIDs[0] !== '' && selectedPeripheral.serviceUUIDs[0] !== undefined && selectedPeripheral.serviceUUIDs[0] !== null">
                                 <td class="text-wrap">Service UUID</td>
-                                <td class="text-wrap">{{serviceUUIDs[0]}}</td>
+                                <td class="text-wrap">{{selectedPeripheral.serviceUUIDs[0]}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="manufacturerData !== '' && manufacturerData !== undefined && manufacturerData !== null">
                                 <td class="text-wrap">Manufacturer Data</td>
                                 <td class="text-wrap">{{manufacturerData}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="selectedPeripheral.name !== '' && selectedPeripheral.name !== undefined && selectedPeripheral.name !== null">
                                 <td class="text-wrap">Complete Name</td>
-                                <td class="text-wrap">{{name}}</td>
+                                <td class="text-wrap">{{selectedPeripheral.name}}</td>
                             </tr>
-                            <tr>
+                            <tr ng-show="selectedPeripheral.txpowerLevel !== '' && selectedPeripheral.txpowerLevel !== undefined && selectedPeripheral.txpowerLevel !== null && selectedPeripheral.txpowerLevel >= 0">
                                 <td class="text-wrap">TX Power Level</td>
-                                <td class="text-wrap" ng-show="txpowerLevel >= 0">{{txpowerLevel}}</td>
+                                <td class="text-wrap" >{{selectedPeripheral.txpowerLevel}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.frameType !== '' && selectedPeripheral.frameType !== undefined && selectedPeripheral.frameType !== null ">
+                                <td class="text-wrap">Frame Type</td>
+                                <td class="text-wrap" >{{selectedPeripheral.frameType}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.url !== '' && selectedPeripheral.url !== undefined && selectedPeripheral.url !== null ">
+                                <td class="text-wrap">URL</td>
+                                <td class="text-wrap" >{{selectedPeripheral.url}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.eddyVersion !== '' && selectedPeripheral.eddyVersion !== undefined && selectedPeripheral.eddyVersion !== null ">
+                                <td class="text-wrap">Version</td>
+                                <td class="text-wrap" >{{selectedPeripheral.eddyVersion}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.timePeriod !== '' && selectedPeripheral.timePeriod !== undefined && selectedPeripheral.timePeriod !== null ">
+                                <td class="text-wrap">Time Interval</td>
+                                <td class="text-wrap" >{{selectedPeripheral.timePeriod}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.advPacketCount !== '' && selectedPeripheral.advPacketCount !== undefined && selectedPeripheral.advPacketCount !== null ">
+                                <td class="text-wrap">Advertisements count</td>
+                                <td class="text-wrap" >{{selectedPeripheral.advPacketCount}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.batteryVoltage !== '' && selectedPeripheral.batteryVoltage !== undefined && selectedPeripheral.batteryVoltage !== null ">
+                                <td class="text-wrap">Battery Voltage</td>
+                                <td class="text-wrap" >{{selectedPeripheral.batteryVoltage}} mV</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.temperature !== '' && selectedPeripheral.temperature !== undefined && selectedPeripheral.temperature !== null ">
+                                <td class="text-wrap">Temperature</td>
+                                <td class="text-wrap" >{{selectedPeripheral.temperature}}<sup>0</sup>C</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.nameSpace !== '' && selectedPeripheral.nameSpace !== undefined && selectedPeripheral.nameSpace !== null ">
+                                <td class="text-wrap">ID Namespace</td>
+                                <td class="text-wrap" >{{selectedPeripheral.nameSpace}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.instanceID !== '' && selectedPeripheral.instanceID !== undefined && selectedPeripheral.instanceID !== null ">
+                                <td class="text-wrap">ID Instance</td>
+                                <td class="text-wrap" >{{selectedPeripheral.instanceID}}</td>
+                            </tr>
+                            <tr ng-show="selectedPeripheral.reserved !== '' && selectedPeripheral.reserved !== undefined && selectedPeripheral.reserved !== null ">
+                                <td class="text-wrap">Reserved</td>
+                                <td class="text-wrap" >{{selectedPeripheral.reserved}}</td>
                             </tr>
                         </table>
                     </div>

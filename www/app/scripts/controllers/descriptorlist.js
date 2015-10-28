@@ -6,6 +6,7 @@ app.controller('descriptorlistController', ['$scope', 'gattip', function($scope,
 
     $scope.readformat = 0;
     $scope.writeformat = 0;
+    $scope.writeIndex = $scope.writeformat;
 
     $scope.$watch('gattip.currentCharacteristic.value', updateCurrentValue);
 
@@ -27,6 +28,36 @@ app.controller('descriptorlistController', ['$scope', 'gattip', function($scope,
                 break;
         }
     }
+
+    $scope.changeDataFormat = function() {
+        var dataFormat = parseInt($scope.writeformat);
+        if ($scope.writeIndex != dataFormat) {
+            switch ($scope.writeformat) {
+                case "0":
+                    if ($scope.writeIndex == 1) {
+                        $scope.inputs = util.a2hex($scope.inputs);
+                    } else {
+                        $scope.inputs = util.dec2hex($scope.inputs);
+                    }
+                    break;
+                case "1":
+                    if ($scope.writeIndex === 0) {
+                        $scope.inputs = util.hex2a($scope.inputs);
+                    } else {
+                        $scope.inputs = util.dec2a($scope.inputs);
+                    }
+                    break;
+                case "2":
+                    if ($scope.writeIndex === 0) {
+                        $scope.inputs = util.hex2dec($scope.inputs);
+                    } else {
+                        $scope.inputs = util.a2dec($scope.inputs);
+                    }
+                    break;
+            }
+        }
+        $scope.writeIndex = parseInt($scope.writeformat);
+    };
 
     $scope.writeValue = function() {
         if (!$scope.inputs) {
