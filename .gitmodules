@@ -3,9 +3,6 @@
 	url = git://github.com/gatt-ip/CoreWebSocket.git
 	branch = ios-build
 
-[submodule "iOS/SocketRocket"]
-	path = iOS/SocketRocket
-	url = https://github.com/gatt-ip/SocketRocket.git
 [submodule "iOS/GATT-IP-LIB"]
 	path = iOS/GATT-IP-LIB
 	url = https://github.com/gatt-ip/gatt-ip-ios.git

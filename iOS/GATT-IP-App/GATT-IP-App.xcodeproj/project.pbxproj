@@ -20,7 +20,6 @@
 		8F0C3C0819E627C1003E6A97 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F0C3C0719E627C1003E6A97 /* Reachability.m */; };
 		8F0C3C0D19E62805003E6A97 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F0C3C0C19E62805003E6A97 /* CoreBluetooth.framework */; };
 		8F0C3C3119E62855003E6A97 /* libGATT-IP-LIB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F0C3C2F19E62832003E6A97 /* libGATT-IP-LIB.a */; };
-		8F0C3C3219E62855003E6A97 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F0C3C2319E6282B003E6A97 /* libSocketRocket.a */; };
 		8FCFE16F1A0E60B1004EF9E6 /* libCoreWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F0C3C1A19E62823003E6A97 /* libCoreWebSocket.a */; };
 		8FF2E55A19F0BE1E00CB0BC6 /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FF2E55919F0BE1E00CB0BC6 /* LogViewController.m */; };
 		8FF2E55C19F0BE3800CB0BC6 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8FF2E55B19F0BE3800CB0BC6 /* libicucore.dylib */; };
@@ -47,34 +46,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = EBB035981327F6FA005EF338;
 			remoteInfo = CoreWebSocket_iOS;
-		};
-		8F0C3C2219E6282B003E6A97 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F6B2082D1450F597009315AF;
-			remoteInfo = SocketRocket;
-		};
-		8F0C3C2419E6282B003E6A97 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F668C880153E91210044DBAC;
-			remoteInfo = SocketRocketOSX;
-		};
-		8F0C3C2619E6282B003E6A97 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F6BDA802145900D200FE3253;
-			remoteInfo = SRWebSocketTests;
-		};
-		8F0C3C2819E6282B003E6A97 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F62417E314D52F3C003CE997;
-			remoteInfo = TestChat;
 		};
 		8F0C3C2E19E62832003E6A97 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -105,7 +76,6 @@
 		8F0C3C0719E627C1003E6A97 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = SOURCE_ROOT; };
 		8F0C3C0C19E62805003E6A97 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		8F0C3C0F19E62823003E6A97 /* CoreWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoreWebSocket.xcodeproj; path = ../CoreWebSocket/CoreWebSocket.xcodeproj; sourceTree = "<group>"; };
-		8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = ../SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		8F0C3C2A19E62832003E6A97 /* GATT-IP-LIB.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "GATT-IP-LIB.xcodeproj"; path = "../GATT-IP-LIB/GATT-IP-LIB.xcodeproj"; sourceTree = "<group>"; };
 		8FBF4CA919FE9B05002F74AC /* www */ = {isa = PBXFileReference; lastKnownFileType = folder; name = www; path = ../../www; sourceTree = "<group>"; };
 		8FF2E55819F0BE1E00CB0BC6 /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
@@ -122,7 +92,6 @@
 				8FF2E55C19F0BE3800CB0BC6 /* libicucore.dylib in Frameworks */,
 				84A2AD9B1B0163BB00E09ED6 /* Crashlytics.framework in Frameworks */,
 				8F0C3C3119E62855003E6A97 /* libGATT-IP-LIB.a in Frameworks */,
-				8F0C3C3219E62855003E6A97 /* libSocketRocket.a in Frameworks */,
 				8FCFE16F1A0E60B1004EF9E6 /* libCoreWebSocket.a in Frameworks */,
 				8F0C3C0D19E62805003E6A97 /* CoreBluetooth.framework in Frameworks */,
 				286AC1BC19FF457F0014A393 /* MessageUI.framework in Frameworks */,
@@ -195,7 +164,6 @@
 			children = (
 				8FF2E55B19F0BE3800CB0BC6 /* libicucore.dylib */,
 				8F0C3C2A19E62832003E6A97 /* GATT-IP-LIB.xcodeproj */,
-				8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */,
 				8F0C3C0F19E62823003E6A97 /* CoreWebSocket.xcodeproj */,
 				8F0C3C0C19E62805003E6A97 /* CoreBluetooth.framework */,
 				286AC1BB19FF457F0014A393 /* MessageUI.framework */,
@@ -209,17 +177,6 @@
 				8F0C3C1619E62823003E6A97 /* CoreWebSocketConsole */,
 				8F0C3C1819E62823003E6A97 /* CoreWebSocket.framework */,
 				8F0C3C1A19E62823003E6A97 /* libCoreWebSocket.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8F0C3C1C19E6282B003E6A97 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8F0C3C2319E6282B003E6A97 /* libSocketRocket.a */,
-				8F0C3C2519E6282B003E6A97 /* SocketRocket.framework */,
-				8F0C3C2719E6282B003E6A97 /* SRWebSocketTests.octest */,
-				8F0C3C2919E6282B003E6A97 /* TestChat.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -287,10 +244,6 @@
 					ProductGroup = 8F0C3C2B19E62832003E6A97 /* Products */;
 					ProjectRef = 8F0C3C2A19E62832003E6A97 /* GATT-IP-LIB.xcodeproj */;
 				},
-				{
-					ProductGroup = 8F0C3C1C19E6282B003E6A97 /* Products */;
-					ProjectRef = 8F0C3C1B19E6282B003E6A97 /* SocketRocket.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -319,34 +272,6 @@
 			fileType = archive.ar;
 			path = libCoreWebSocket.a;
 			remoteRef = 8F0C3C1919E62823003E6A97 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8F0C3C2319E6282B003E6A97 /* libSocketRocket.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSocketRocket.a;
-			remoteRef = 8F0C3C2219E6282B003E6A97 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8F0C3C2519E6282B003E6A97 /* SocketRocket.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = SocketRocket.framework;
-			remoteRef = 8F0C3C2419E6282B003E6A97 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8F0C3C2719E6282B003E6A97 /* SRWebSocketTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = SRWebSocketTests.octest;
-			remoteRef = 8F0C3C2619E6282B003E6A97 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		8F0C3C2919E6282B003E6A97 /* TestChat.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = TestChat.app;
-			remoteRef = 8F0C3C2819E6282B003E6A97 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		8F0C3C2F19E62832003E6A97 /* libGATT-IP-LIB.a */ = {
