@@ -1,5 +1,6 @@
 package org.gatt_ip.app;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -7,6 +8,7 @@ import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
 import com.crashlytics.android.Crashlytics;
 
 import org.gatt_ip.BluetoothLEService;
@@ -41,6 +45,7 @@ public class LocalGATTIPActivity extends Activity {
     public static LocalGATTIPActivity lActivity;
     static WebsocketService server;
     StartServerTask task;
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     @JavascriptInterface
     @Override
@@ -48,6 +53,13 @@ public class LocalGATTIPActivity extends Activity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.local_gattip);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M permission check
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+            }
+	}
 
         ctx = this;
         lActivity = this;
@@ -84,6 +96,29 @@ public class LocalGATTIPActivity extends Activity {
         mWebview.loadUrl("file:///android_asset/www/index.html");
     }
 
+     @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_COARSE_LOCATION: {
+                if (grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)  {
+                    Toast.makeText(this.getApplication(),"Permission has been granted", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Functionality limited");
+                    builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                        }
+                    });
+                    builder.show();
+                }
+            }
+        }
+    }
+
     private class StartServerTask extends AsyncTask<String, Object, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -105,8 +140,6 @@ public class LocalGATTIPActivity extends Activity {
         Log.d("LocalGATTIPActivity", "disconnect stick");
 
         if(server != null) {
-            unbindService(server.gattip);
-
             try {
                 server.stop();
             } catch (IOException ie) {

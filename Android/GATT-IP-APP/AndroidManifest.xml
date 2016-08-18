@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.gatt_ip.activity"
-    android:versionCode="20150701"
-    android:versionName="1.1.1" xmlns:tools="http://schemas.android.com/tools">
+    android:versionCode="20160604"
+    android:versionName="1.7" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
         android:minSdkVersion="18"
-        android:targetSdkVersion="21" />
-    <uses-permission android:name="android.permission.INTERNET" /> 
+        android:targetSdkVersion="23" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- Bluetooth Permissions -->     
+    <!-- Bluetooth Permissions -->
+    <uses-feature android:name="android.hardware.bluetooth" android:required="true"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-     
+	<!-- Location Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/appicon"
@@ -21,8 +25,8 @@
         android:theme="@style/AppTheme" tools:replace="android:theme">
         <activity
             android:name="org.gatt_ip.app.LocalGATTIPActivity"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" >
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,20 +34,20 @@
         </activity>
         <activity
             android:name="org.gatt_ip.app.RemoteGATTIPActivity"
-            android:screenOrientation="portrait" 
-            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" 
-            android:windowSoftInputMode="stateVisible" >
-        </activity>   
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        </activity>
         <activity
             android:name="org.gatt_ip.app.LogView"
-            android:screenOrientation="portrait" 
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" >
-        </activity>  
-        
-        
+        </activity>
+
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="6d715e3b8a10e69b3a20cd54082e9302ff8318b9" />
+            android:value="b86d7159b3a20cde3a10e654082ff831e93028b9" />
+
     </application>
 
 </manifest>

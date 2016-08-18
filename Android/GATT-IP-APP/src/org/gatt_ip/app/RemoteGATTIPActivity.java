@@ -181,6 +181,7 @@ public class RemoteGATTIPActivity extends Activity implements OnClickListener{
             NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
             if(networkInfo.getType()== ConnectivityManager.TYPE_WIFI ||networkInfo.getType()== ConnectivityManager.TYPE_MOBILE ||networkInfo.getType()== ConnectivityManager.TYPE_BLUETOOTH){
                 getIPAddress();
+                initializeViews();
             }
         }
     };

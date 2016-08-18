@@ -7,7 +7,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -18,14 +18,25 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':GATT-IP-LIB')
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.4@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.6@aar') {
         transitive = true;
     }
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "21.1.2"
+    defaultConfig {
+        multiDexEnabled true
+    }
+    signingConfigs {
+        release {
+            storeFile file(new File('codesigning/Keystore'))
+            storePassword 'gattip123'
+            keyAlias 'gattip'
+            keyPassword 'gattip123'
+        }
+    }
 
     sourceSets {
         main {
