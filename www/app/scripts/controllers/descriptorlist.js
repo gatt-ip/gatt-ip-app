@@ -1,98 +1,110 @@
-app.controller('descriptorlistController', ['$scope', 'gattip', function($scope, gattip) {
+app.controller('descriptorlistCtrl', function($scope, $state) {
+    // console.log('descriptorlistCtrl');
+    if(isGattipApp) $scope.isGattipApp = true;
+    $scope.bleexplorer = bleexplorer;
 
-    $scope.gattip = gattip;
+    $scope.readformat = "Hex";
+    $scope.writeformat = 'Hex';
 
-    var util = Util();
+    var util = new Util();
+    $scope.bleexplorer.isNotifying = false;
+    var charValue = '';
 
-    $scope.readformat = 0;
-    $scope.writeformat = 0;
-    $scope.writeIndex = $scope.writeformat;
-
-    $scope.$watch('gattip.currentCharacteristic.value', updateCurrentValue);
-
-    $scope.changeFormat = updateCurrentValue;
-
-    function updateCurrentValue() {
-        switch ($scope.readformat) {
-            case "1":
-                $scope.currentValue = util.hex2a(gattip.currentCharacteristic.value);
-                break;
-            case "2":
-                $scope.currentValue = util.hex2dec(gattip.currentCharacteristic.value);
-                break;
-            case "3":
-                $scope.currentValue = util.hex2b(gattip.currentCharacteristic.value);
-                break;
-            default:
-                $scope.currentValue = gattip.currentCharacteristic.value;
-                break;
-        }
+    if ($scope.bleexplorer.currentCharacteristic.properties.Read && $scope.bleexplorer.currentCharacteristic.properties.Read.enabled) {
+        $scope.bleexplorer.currentCharacteristic.readValue(function(char, value) {
+            // console.log("Got value ", value);
+            charValue = value;
+            $scope.changeFormat();
+        });
     }
 
-    $scope.changeDataFormat = function() {
-        var dataFormat = parseInt($scope.writeformat);
-        if ($scope.writeIndex != dataFormat) {
-            switch ($scope.writeformat) {
-                case "0":
-                    if ($scope.writeIndex == 1) {
-                        $scope.inputs = util.a2hex($scope.inputs);
-                    } else {
-                        $scope.inputs = util.dec2hex($scope.inputs);
-                    }
-                    break;
-                case "1":
-                    if ($scope.writeIndex === 0) {
-                        $scope.inputs = util.hex2a($scope.inputs);
-                    } else {
-                        $scope.inputs = util.dec2a($scope.inputs);
-                    }
-                    break;
-                case "2":
-                    if ($scope.writeIndex === 0) {
-                        $scope.inputs = util.hex2dec($scope.inputs);
-                    } else {
-                        $scope.inputs = util.a2dec($scope.inputs);
-                    }
-                    break;
-            }
+    $scope.changeFormat = function() {
+        switch ($scope.readformat) {
+            case 'ASCII':
+                $scope.currentValue = util.hex2a(charValue);
+                break;
+            case 'Int':
+                $scope.currentValue = util.hex2dec(charValue);
+                break;
+            case 'Binary':
+                $scope.currentValue = util.hex2b(charValue);
+                break;
+            default:
+                $scope.currentValue = charValue;
+                break;
         }
-        $scope.writeIndex = parseInt($scope.writeformat);
+        if (!$scope.$$phase) {
+            $scope.$apply();
+        }
     };
 
     $scope.writeValue = function() {
-        if (!$scope.inputs) {
-            util.show_alert('Please enter value to write.');
-            return;
-        }
         var writeTemp = '';
-        switch ($scope.writeformat) {
-            case "1":
-                writeTemp = util.a2hex($scope.inputs);
-                break;
-            case "2":
-                writeTemp = util.dec2hex($scope.inputs);
-                break;
-            case "3":
-                writeTemp = $scope.inputs; //TODO
-                break;
-            default:
-                writeTemp = $scope.inputs;
-                break;
+        if ($scope.inputs !== '' && $scope.inputs !== null && $scope.inputs !== undefined) {
+            switch ($scope.writeformat) {
+                case 'ASCII':
+                    writeTemp = util.a2hex($scope.inputs);
+                    $scope.bleexplorer.currentCharacteristic.writeValue(function(char) {
+                        // console.log('write success');
+                        $scope.bleexplorer.onSuccess('Successfully wrote the value ');
+                    }, writeTemp);
+                    break;
+                case 'Int':
+                    writeTemp = util.dec2hex($scope.inputs);
+                    $scope.bleexplorer.currentCharacteristic.writeValue(function(char) {
+                        // console.log('write success');
+                        $scope.bleexplorer.onSuccess('Successfully wrote the value ');
+                    }, writeTemp);
+                    break;
+                case 'Binary':
+                    writeTemp = $scope.inputs; //TODO
+                    break;
+                default:
+                    writeTemp = $scope.inputs;
+                    if (util.isValidHex(writeTemp)) {
+                        $scope.bleexplorer.currentCharacteristic.writeValue(function(char) {
+                            // console.log('write success');
+                            $scope.bleexplorer.onSuccess('Successfully wrote the value ');
+                        }, writeTemp);
+                    } else {
+                        $scope.bleexplorer.showAlert('Entered Hex is Invalid.');
+                    }
+                    break;
+            }
+        } else {
+            $scope.bleexplorer.showAlert('Enter the value to write.');
         }
-
-        gattip.currentCharacteristic.write(writeTemp);
     };
 
     $scope.readAgain = function() {
-        gattip.currentCharacteristic.read();
+        if ($scope.bleexplorer.currentCharacteristic.properties.Read && $scope.bleexplorer.currentCharacteristic.properties.Read.enabled) {
+            $scope.bleexplorer.currentCharacteristic.readValue(function(char, value) {
+                // console.log("Got value ", value);
+                charValue = value;
+                $scope.changeFormat();
+            });
+        }
     };
 
     $scope.notify = function() {
-        gattip.currentCharacteristic.notify(true);
+        var value = '';
+        $scope.bleexplorer.currentCharacteristic.on('valueChange', function(charac) {
+            charValue = charac.value;
+            $scope.changeFormat();
+        }, value);
+        $scope.bleexplorer.currentCharacteristic.enableNotifications(function(charac, value) {
+            $scope.bleexplorer.isNotifying = value;
+            // console.log('Enabled the notification ', value);
+            $scope.$apply();
+        }, true);
     };
 
     $scope.stopNotify = function() {
-        gattip.currentCharacteristic.notify(false);
+        $scope.bleexplorer.currentCharacteristic.enableNotifications(function(charac, value) {
+            $scope.bleexplorer.isNotifying = value;
+            // console.log('Disable the notification ', value);
+            $scope.$apply();
+        }, false);
     };
 
     $scope.back = function() {
@@ -102,4 +114,5 @@ app.controller('descriptorlistController', ['$scope', 'gattip', function($scope,
     $scope.gotologview = function() {
         window.location = 'gatt-ip://logview';
     };
-}]);
+
+});

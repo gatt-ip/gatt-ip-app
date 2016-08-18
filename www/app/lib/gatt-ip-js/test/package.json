@@ -1,0 +1,9 @@
+{
+  "name": "gattip-test",
+  "version": "0.0.1",
+  "description": "Gatt IP Client",
+  "dependencies": {
+    "gatt-ip" : "file:../src/",
+    "promise" : "latest"
+  }
+}

@@ -1,98 +1,144 @@
-<body>
-    <div class="row logo-header">
-        <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 back-btn" ng-click="back()"></div>
-        <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
-        <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()">
-            <h3>Log</h3>
-        </div>
+<div class="row logo-header" ng-show="isGattipApp">
+    <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 back-btn" ng-click="back()"></div>
+    <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
+    <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()">
+        <h3>Log</h3>
     </div>
-
-    <div class="row title-text">
-        <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
-            <h4 class="char">UUID : {{gattip.currentCharacteristic.characteristicName}}</h4>
-        </div>
+</div>
+<md-toolbar class="mb-10">
+    <div class="md-toolbar-tools">
+        <h2>
+          <span ng-show='bleexplorer.currentCharacteristic.characteristicName'>{{bleexplorer.currentCharacteristic.characteristicName}}</span>
+          <span ng-hide='bleexplorer.currentCharacteristic.characteristicName'>{{bleexplorer.currentCharacteristic.uuid}}</span>
+        </h2>
     </div>
-    <div id="read">
-        <div class="row header" ng-show="gattip.currentCharacteristic.properties[1].enabled||gattip.currentCharacteristic.properties[4].enabled">
-            <h3>Read/Notified Values</h3>
-        </div>
-        <div class="row">
-            <div class="container" style="padding:0px;">
-                <!--      <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="gattip.currentCharacteristic.properties[1].enabled">-->
-                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4 desc-read-btn" ng-show="gattip.currentCharacteristic.properties[1].enabled">
-
-                    <button type="button" class="btn btn-default read-btn" ng-click='readAgain()' value='Read Again'>Read</button>
+</md-toolbar>
+<div class="list-padding">
+    <div ng-show="bleexplorer.currentCharacteristic.properties.Read.enabled||bleexplorer.currentCharacteristic.properties.Notify.enabled">
+        <div class="discripter-border">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button" aria-label="Settings">
+                        <i class="mdi mdi-read" style="font-size: 25px;"></i>
+                    </md-button>
+                    <h2>
+                      <span>READ/NOTIFIED VALUES</span>
+                    </h2>
                 </div>
-                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show="(gattip.currentCharacteristic.properties[4].enabled || gattip.currentCharacteristic.properties[5].enabled) && !gattip.currentCharacteristic.isNotifying">
-                    <button type="button" class="btn btn-default listen-btn" ng-click="notify()" value='Listen for notifications'>Listen</button>
-                </div>
-                <div class="col-lg-4 col-xs-4 col-sm-4 col-md-4" ng-show='(gattip.currentCharacteristic.properties[4].enabled || gattip.currentCharacteristic.properties[5].enabled) && gattip.currentCharacteristic.isNotifying'>
-                    <button type="button" class="btn btn-default stop-btn" ng-click="stopNotify()" value='Stop notifications'>Stop</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="container" style="padding:0px;">
-                <!--    <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4"  ng-show='gattip.currentCharacteristic.properties[1].enabled'>-->
-                <div class="col-lg-6 col-xs-4 col-sm-2 col-md-4 hex-drop" ng-show='gattip.currentCharacteristic.properties[1].enabled'>
-                    <select class="form-control dropdown-values" ng-model="readformat" ng-change="changeFormat()">
-                        <option value="0">Hex</option>
-                        <option value="1">ASCII</option>
-                        <option value="2">Decimal</option>
-                        <!--option value="3">Binary</option-->
-                    </select>
-                </div>
-                <div class="col-lg-8 col-xs-8 col-sm-10 col-md-8 current-value">
-                    <h2>{{currentValue}}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div id='write' ng-show="gattip.currentCharacteristic.properties[3].enabled || gattip.currentCharacteristic.properties[2].enabled">
-            <div class="row header">
-                <h3>Writen Values</h3>
-            </div>
-            <div class="row">
-                <div class="container" style="padding:0px;">
-                    <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">
-                        <input ng-model="inputs" class="form-control write-text" id="exampleInputEmail1" placeholder="Write Value Here">
+            </md-toolbar>
+            <div>
+                <div class="md-padding">
+                    <div class="layout-wrap layout-row flex-100" layout="row" flex="100" layout-wrap="">
+                        <md-button class="md-primary md-raised" style="background-color: #A99595;" ng-show="bleexplorer.currentCharacteristic.properties.Read.enabled" ng-click="readAgain()">
+                            Read
+                        </md-button>
+                        <md-button class="md-primary md-raised" style="background-color: #A99595;" ng-show="(bleexplorer.currentCharacteristic.properties.Notify.enabled  || gattip.currentCharacteristic.properties.Indicate.enabled) && !bleexplorer.currentCharacteristic.isNotifying" ng-click="notify()">
+                            Listen
+                        </md-button>
+                        <md-button class="md-primary md-raised" style="background-color: #A99595;" ng-show='(bleexplorer.currentCharacteristic.properties.Notify.enabled  || gattip.currentCharacteristic.properties.Indicate.enabled) && bleexplorer.currentCharacteristic.isNotifying' ng-click="stopNotify()">
+                            Stop
+                        </md-button>
                     </div>
-                    <div class="col-lg-4 col-xs-4 col-sm-2 col-md-4">
-                        <select class="form-control dropdown-values" ng-model="writeformat">
-                            <option value="0">Hex</option>
-                            <option value="1">ASCII</option>
-                            <option value="2">Decimal</option>
-                            <!--option value="3">Binary</option-->
-                        </select>
-                    </div>
-                    <div class="col-lg-8 col-xs-8 col-sm-10 col-md-8">
-                        <button class="btn btn-default write-btn" ng-click='writeValue()' value='Done'>Write</button>
+                    <div class="layout-wrap layout-row flex-100" layout="row" flex="100" layout-wrap="">
+                        <md-input-container>
+                            <md-select ng-model="readformat" aria-label="format" ng-change="changeFormat(currentValue)">
+                                <md-option value="Hex">Hex</md-option>
+                                <md-option value="ASCII">ASCII</md-option>
+                                <md-option value="Int">Int</md-option>
+                            </md-select>
+                        </md-input-container>
+                        <h4 class="mt-30">{{currentValue}}</h4>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row header">
-        <h3>Descriptors</h3>
-    </div>
-    <div class="row" style="margin:10px 0px 10px 0px;">
-        <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 descriptors" ng-repeat="descriptor in gattip.currentCharacteristic.descriptors">
-            <h2 ng-if="descriptors == []">0</h2>
-            <h2 ng-if="descriptors != []">{{descriptor.descriptorName}}</h2>
+    <div ng-show="bleexplorer.currentCharacteristic.properties.Write.enabled || bleexplorer.currentCharacteristic.properties.WriteWithoutResponse.enabled" class="discripter-border">
+        <div class="panel panel-yellow" style="margin-bottom:0px;">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <md-button class="md-icon-button" aria-label="Settings">
+                        <i class="mdi mdi-border-color" style="font-size: 25px;"></i>
+                    </md-button>
+                    <h2>
+                      <span>WRITTEN VALUES</span>
+                    </h2>
+                </div>
+            </md-toolbar>
+            <div class="md-padding">
+                <div class="layout-wrap layout-row flex-100" layout="row" flex="100" layout-wrap="" style="-webkit-overflow-scrolling: auto;">
+                    <md-input-container class="md-block" flex-gt-sm>
+                        <label>Write Value Here</label>
+                        <input ng-model="inputs">
+                    </md-input-container>
+                </div>
+                <div class="layout-wrap layout-row flex-100" layout="row" flex="100" layout-wrap="">
+                    <md-input-container>
+                        <md-select ng-model="writeformat" aria-label="writeformat" ng-change="changeFormat()">
+                            <md-option value="Hex">Hex</md-option>
+                            <md-option value="ASCII">ASCII</md-option>
+                            <md-option value="Int">Int</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-button class="md-primary md-raised" style="background-color: #A99595; height:40px" ng-click='writeValue()'>
+                        Write
+                    </md-button>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row header">
-        <h3>Properties</h3>
-    </div>
-    <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 rows" ng-repeat="property in gattip.currentCharacteristic.properties">
-        <h2 ng-show='property.enabled'>{{property.name}}</h2>
-    </div>
-
-    <div class="alert-box alert-btn" id="customalert" ng-controller="AlertController">
-        <div id="alertmessage"></div>
-        <div>
-            <button type="button" class="btn btn-blue3" ng-click="hide_alert()"><i class="fa fa-check"></i> OK </button>
+    <div class="panel panel-yellow discripter-border" style="margin-bottom:0px;">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" aria-label="Settings">
+                    <i class="mdi mdi-tag" style="font-size: 25px;"></i>
+                </md-button>
+                <h2>
+                  <span>DESCRIPTORS</span>
+                </h2>
+            </div>
+        </md-toolbar>
+        <div class="panel-body md-padding">
+            <div class="table-responsive">
+                <table class="table" style="margin-bottom:0px;">
+                    <tbody>
+                        <tr ng-repeat="descriptor in bleexplorer.currentCharacteristic.descriptors">
+                            <td>
+                                <h3 ng-if="descriptors == []" class="mt-10">0</h3>
+                                <h3 ng-if="descriptors != []" ng-show='descriptor.descriptorName' class="mt-10">{{descriptor.descriptorName}}</h3>
+                                <h3 ng-if="descriptors != []" ng-hide='descriptor.descriptorName' class="mt-10">{{descriptor.uuid}}</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</body>
+    <div class="panel panel-yellow discripter-border" style="margin-bottom:0px;">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" aria-label="Settings">
+                    <i class="mdi mdi-settings" style="font-size: 25px;"></i>
+                </md-button>
+                <h2>
+                  <span>PROPERTIES</span>
+                </h2>
+            </div>
+        </md-toolbar>
+        <div class="panel-body md-padding">
+            <div class="table-responsive">
+                <table class="table" style="margin-bottom:0px;">
+                    <tbody>
+                        <tr ng-repeat="property in bleexplorer.currentCharacteristic.properties" ng-show='property.enabled'>
+                            <td>
+                                <h3 class="mt-10">{{property.name}}</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>

@@ -205,4 +205,5 @@ static Logs* _sharedSingleton = nil;
     NSDictionary *responseDict =  [self getMessageDict:message];
     [self handleLoggingRequestAndResponse:responseDict];
 }
+
 @end

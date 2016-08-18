@@ -1,0 +1,13 @@
+{
+  "name": "gatt-ip-web",
+  "version": "0.0.1",
+  "author": {
+    "name": "Nik Markovic",
+    "email": "Nik.Markovic@vensi.com"
+  },
+
+  "description": "Gatt IP Client",
+  "dependencies": {
+    "gatt-ip" : "file:./src/"
+  }
+}

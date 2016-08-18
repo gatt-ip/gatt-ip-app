@@ -1,154 +1,134 @@
-<script>
-    $('#myModal').on('shown.bs.modal', function () {
-                     $('#myInput').focus()
-                     })
-    </script>
-<body>
-    <div class="row logo-header">
-        <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 remote-view" ng-click="gotoremoteview()">
-            <h3>Remote</h3>
-        </div>
-        <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
-        <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()">
-            <h3>Log</h3>
-        </div>
+<div class="row logo-header" ng-show="isGattipApp">
+    <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 remote-view" ng-click="gotoremoteview()">
+        <h3>Remote</h3>
     </div>
-    <div class="row title-text">
-        <h3>PERIPHERALS NEARBY</h3>
+    <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
+    <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()">
+        <h3>Log</h3>
     </div>
-    <div class="pull" style="display:none">Pull down</div>
-    <div class="PullToRefresh">
-        <div class="iscroll-scroller">
-            <div class="iscroll-content"> <a ng-repeat="peripheral in gattip.peripherals | orderObjectBy:'rssi':flag" >
-                <div class="row listview" >
-                    <div class="col-lg-1 col-xs-1 col-sm-1 col-md-1 signal-strength">
-                        <div class="row">
-                            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12"><img ng-src={{peripheral.image}} width='19' hight='22' alt="SS" /></div>
-                            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12">{{peripheral.rssi}}</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 col-xs-9 col-sm-8 col-md-8 aglin-padding">
-                        <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 no-padding">
-                            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 devicename div-name device-width" ng-click="connectPeripheral(peripheral)">{{peripheral.name}}</div>
-                            <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 devicename div-small device-width" >
-                                <span ng-show="peripheral.txpowerLevel >= 0">TXLevel:{{peripheral.txpowerLevel}}</span>
-                                <span ng-show="peripheral.discoverable">Connectable:{{peripheral.discoverable}}</span>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-xs-1 col-sm-2 col-md-2 aglin-padding text-right" style="padding-left:0px;">
-                        <button type="button" class="btn btn-default btn-blue2" data-toggle="modal" data-target="#myModal" aria-expanded="false"  ng-click="showData(peripheral)"><i class="fa fa-info-circle"></i> </button>
-                    </div>
-                    <div class="col-lg-1 col-xs-1 col-sm-1 col-md-1 devicelist-arrow-icon pull-right"></div>
+</div>
+<md-toolbar class="mb-10">
+    <div class="md-toolbar-tools">
+        <h2>
+          <span>PERIPHERALS NEARBY</span>
+        </h2>
+    </div>
+    <div ng-if="isScanning">
+        <md-progress-circular md-mode="indeterminate" md-diameter="60" style="position:absolute;top:-5px;right: 1px;width: 25px;height: 25px;" class="md-accent md-hue-2" width="50" height="50"></md-progress-circular>
+    </div>
+</md-toolbar>
+<div layout="row" flex="100">
+    <div layout="column" flex="50">
+        <md-button class="md-raised md-primary" style="background:grey;color:white;" ng-click="showfilterOptions()">
+            <div layout="row" layout-align="center center">
+                <div>{{userFilters}}</div>
+                <div class="scan-filter"><i class="mdi mdi-chevron-down"></i></div>
+            </div>
+        </md-button>
+    </div>
+    <div layout="column" flex="50">
+        <md-menu md-position-mode="target-right target" md-offset="0 42" style="margin-right: 14px;">
+            <md-button class="md-raised md-primary" style="background:grey; color:white; margin-top:-2px; width: 100%;" aria-label="Open phone interactions menu" ng-click="openMenu($mdOpenMenu, $event)">
+                <div layout="row" layout-align="center center">
+                    <div>{{showOption}}</div>
+                    <div class="scan-filter" ng-if="showOption != 'Stop Scan'"><i class="mdi mdi-chevron-down"></i></div>
                 </div>
-            </a> </div>
-        </div>
+            </md-button>
+            <md-menu-content width="4">
+                <md-menu-item>
+                    <md-button ng-click="scanStopScan()">
+                        <i class="mdi mdi-magnify"></i> {{scanOption}}
+                    </md-button>
+                </md-menu-item>
+                <md-menu-divider></md-menu-divider>
+                <md-menu-item>
+                    <md-button ng-disabled="isScanning" ng-click="sortByName()">
+                        <i class="mdi mdi-sort-alphabetical"></i> Sort by Name
+                    </md-button>
+                </md-menu-item>
+                <md-menu-divider></md-menu-divider>
+                <md-menu-item>
+                    <md-button ng-disabled="isScanning" ng-click="sortByRSSI()">
+                        <i class="mdi mdi-rss"></i> Sort by Near
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
     </div>
-    <div class="modal fade text-left" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
-        <div class="modal-dialog" style="margin-top: 100px;">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row" style="  margin-left: -15px;
-                        margin-right: -15px;">
-                        <div class="col-xs-8">
-                            <h4>Raw Data:</h4>
+</div>
+
+<div class="md-padding pt-0">
+    <div layout="row" layout-align="start stretch" class="list-item1 " ng-repeat="peripheral in bleexplorer.scanned_perips" ng-show="bleexplorer.filterScan == false">
+        <div layout="column" flex="5" layout-align="start start">
+            <div flex style="padding-left: 9px;padding-top: 13px;">
+                <img ng-src={{peripheral.image}} width='22' hight='25' />
+            </div>
+            <div layout="row" style="padding-bottom: 7px;">
+              <div flex >{{peripheral.rssi}}</div>
+              <div style="padding-left: 2px;"> dB</div>
+            </div>
+        </div>
+        <div layout="row" flex="95" layout-align="space-between center" style="padding-left:17px;">
+            <div flex="80" ng-click="connectPeripheral(peripheral)" style="cursor: pointer;">
+                <div layout="column" layout-align="start start" style="padding-left: 11px;">
+                    <div flex style="font-size: 16px;"><strong>{{peripheral.name}}</strong></div>
+                    <div flex style="font-size: 14px;">{{peripheral.uuid}}</div>
+                    <div layout="row" flex class="font-14" style="padding-top: 4px;">
+                        <div ng-if="peripheral.txpowerLevel != undefined">
+                            TXLevel:{{peripheral.txpowerLevel}}&nbsp
                         </div>
-                        <div class="col-xs-4">
-                            <select style="margin-top:0px;" ng-model="showformat" class="form-control dropdown-values" ng-change="changeDataFormat(this)">
-                                <option value="0" >Hex</option>
-                                <option value="1" >ASCII</option>
-                                <option value="2">Decimal</option>
-                            </select>
+                        <div ng-if="peripheral.discoverable">
+                            Connectable:{{peripheral.discoverable}}&nbsp
                         </div>
-                    </div>
-                    <div class="raw-data">{{rawAdvertisingData}}</div>
-                    <h4>Details:</h4>
-                    <div class="table-responsive">
-                        <table id = "data" class="table table-bordered" style="font-size: 14px;">
-                            <tr>
-                                <th style="width: 40%;">TYPE</th>
-                                <th>VALUE</th>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.rssi !== '' && selectedPeripheral.rssi !== undefined && selectedPeripheral.rssi !== null">
-                                <td class="text-wrap">RSSI</td>
-                                <td class="text-wrap">{{selectedPeripheral.rssi}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.discoverable !== '' && selectedPeripheral.discoverable !== undefined && selectedPeripheral.discoverable !== null">
-                                <td class="text-wrap">Discoverable Mode</td>
-                                <td class="text-wrap">{{selectedPeripheral.discoverable}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.serviceUUIDs[0] !== '' && selectedPeripheral.serviceUUIDs[0] !== undefined && selectedPeripheral.serviceUUIDs[0] !== null">
-                                <td class="text-wrap">Service UUID</td>
-                                <td class="text-wrap">{{selectedPeripheral.serviceUUIDs[0]}}</td>
-                            </tr>
-                            <tr ng-show="manufacturerData !== '' && manufacturerData !== undefined && manufacturerData !== null">
-                                <td class="text-wrap">Manufacturer Data</td>
-                                <td class="text-wrap">{{manufacturerData}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.name !== '' && selectedPeripheral.name !== undefined && selectedPeripheral.name !== null">
-                                <td class="text-wrap">Complete Name</td>
-                                <td class="text-wrap">{{selectedPeripheral.name}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.txpowerLevel !== '' && selectedPeripheral.txpowerLevel !== undefined && selectedPeripheral.txpowerLevel !== null && selectedPeripheral.txpowerLevel >= 0">
-                                <td class="text-wrap">TX Power Level</td>
-                                <td class="text-wrap" >{{selectedPeripheral.txpowerLevel}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.frameType !== '' && selectedPeripheral.frameType !== undefined && selectedPeripheral.frameType !== null ">
-                                <td class="text-wrap">Frame Type</td>
-                                <td class="text-wrap" >{{selectedPeripheral.frameType}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.url !== '' && selectedPeripheral.url !== undefined && selectedPeripheral.url !== null ">
-                                <td class="text-wrap">URL</td>
-                                <td class="text-wrap" >{{selectedPeripheral.url}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.eddyVersion !== '' && selectedPeripheral.eddyVersion !== undefined && selectedPeripheral.eddyVersion !== null ">
-                                <td class="text-wrap">Version</td>
-                                <td class="text-wrap" >{{selectedPeripheral.eddyVersion}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.timePeriod !== '' && selectedPeripheral.timePeriod !== undefined && selectedPeripheral.timePeriod !== null ">
-                                <td class="text-wrap">Time Interval</td>
-                                <td class="text-wrap" >{{selectedPeripheral.timePeriod}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.advPacketCount !== '' && selectedPeripheral.advPacketCount !== undefined && selectedPeripheral.advPacketCount !== null ">
-                                <td class="text-wrap">Advertisements count</td>
-                                <td class="text-wrap" >{{selectedPeripheral.advPacketCount}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.batteryVoltage !== '' && selectedPeripheral.batteryVoltage !== undefined && selectedPeripheral.batteryVoltage !== null ">
-                                <td class="text-wrap">Battery Voltage</td>
-                                <td class="text-wrap" >{{selectedPeripheral.batteryVoltage}} mV</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.temperature !== '' && selectedPeripheral.temperature !== undefined && selectedPeripheral.temperature !== null ">
-                                <td class="text-wrap">Temperature</td>
-                                <td class="text-wrap" >{{selectedPeripheral.temperature}}<sup>0</sup>C</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.nameSpace !== '' && selectedPeripheral.nameSpace !== undefined && selectedPeripheral.nameSpace !== null ">
-                                <td class="text-wrap">ID Namespace</td>
-                                <td class="text-wrap" >{{selectedPeripheral.nameSpace}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.instanceID !== '' && selectedPeripheral.instanceID !== undefined && selectedPeripheral.instanceID !== null ">
-                                <td class="text-wrap">ID Instance</td>
-                                <td class="text-wrap" >{{selectedPeripheral.instanceID}}</td>
-                            </tr>
-                            <tr ng-show="selectedPeripheral.reserved !== '' && selectedPeripheral.reserved !== undefined && selectedPeripheral.reserved !== null ">
-                                <td class="text-wrap">Reserved</td>
-                                <td class="text-wrap" >{{selectedPeripheral.reserved}}</td>
-                            </tr>
-                        </table>
+                        <div ng-if="peripheral.advdata.discoverable">
+                            Connectable:{{peripheral.advdata.discoverable}}
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="text-align:center;">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-                </div>
+            </div>
+            <div flex="5" ng-click="showAdvInfoDialog($event, peripheral)" class="text-right">
+                <i class="mdi mdi-information-outline" style="font-size: 27px;"></i>
+            </div>
+            <div flex="5">
+                <i class="mdi mdi-chevron-right" style="font-size: 25px;"></i>
             </div>
         </div>
     </div>
-    
-    <div class="alert-box alert-btn" id="customalert" ng-controller="AlertController">
-        <div id="alertmessage"></div>
-        <div>
-            <button type="button" class="btn btn-blue3" ng-click="hide_alert()"><i class="fa fa-check"></i> OK </button>
+
+    <div layout="row" layout-align="start stretch" class="list-item1 " ng-repeat="peripheral in bleexplorer.filter_scanned_perips" ng-show="bleexplorer.filterScan == true">
+        <div layout="column" flex="5" layout-align="start start">
+            <div flex style="padding-left: 9px;padding-top: 13px;">
+                <img ng-src={{peripheral.image}} width='22' hight='25' />
+            </div>
+            <div layout="row" style="padding-bottom: 7px;">
+              <div flex >{{peripheral.rssi}}</div>
+              <div style="padding-left: 2px;"> dB</div>
+            </div>
+        </div>
+        <div layout="row" flex="95" layout-align="space-between center" style="padding-left:17px;">
+            <div flex="80" ng-click="connectPeripheral(peripheral)" style="cursor: pointer;">
+                <div layout="column" layout-align="start start" style="padding-left: 11px;">
+                    <div flex style="font-size: 16px;"><strong>{{peripheral.name}}</strong></div>
+                    <div flex style="font-size: 14px;">{{peripheral.uuid}}</div>
+                    <div layout="row" flex class="font-14" style="padding-top: 4px;">
+                        <div ng-if="peripheral.txpowerLevel != undefined">
+                            TXLevel:{{peripheral.txpowerLevel}}&nbsp
+                        </div>
+                        <div ng-if="peripheral.discoverable">
+                            Connectable:{{peripheral.discoverable}}&nbsp
+                        </div>
+                        <div ng-if="peripheral.advdata.discoverable">
+                            Connectable:{{peripheral.advdata.discoverable}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div flex="5" ng-click="showAdvInfoDialog($event, peripheral)" class="text-right">
+                <i class="mdi mdi-information-outline" style="font-size: 27px;"></i>
+            </div>
+            <div flex="5">
+                <i class="mdi mdi-chevron-right" style="font-size: 25px;"></i>
+            </div>
         </div>
     </div>
-    
-</body>
+</div>

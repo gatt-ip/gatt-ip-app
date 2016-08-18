@@ -32,19 +32,6 @@
 @end
 
 @implementation LogViewController
-
-- (IBAction)goBack:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:^(void){}];
-}
-
-#pragma mark -
-
--(void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:YES];
@@ -52,6 +39,9 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(reloadView) name: @"GotNewMessage" object: nil];
 }
 
+- (IBAction)goBack:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:^(void){}];
+}
 
 - (IBAction)email:(UIButton *)sender {
     NSString *iOSVersion = [[UIDevice currentDevice] systemVersion];
@@ -66,7 +56,6 @@
                                      delegate:nil
                                      cancelButtonTitle:@"Ok"
                                      otherButtonTitles:nil];
-        
         [alertMessage show];
         
         return;
@@ -90,8 +79,6 @@
     [self presentViewController:mailComposer animated:YES completion:nil];
 }
 
-
-
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -108,7 +95,6 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         self.textView.text = currentString;
     });
-    
 }
 
 @end

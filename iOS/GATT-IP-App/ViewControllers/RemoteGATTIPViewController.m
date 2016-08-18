@@ -35,6 +35,7 @@
 }
 @property(nonatomic, strong) GATTIP *gattip;
 @end
+
 @implementation RemoteGATTIPViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -77,6 +78,7 @@ void Callback1 (WebSocketRef sockref, WebSocketClientRef client, CFStringRef val
 
 -(void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     if([appDelegate checkReachability] == NotReachable) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Network" message:@"There is no network, which is required to connect to the remote server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];

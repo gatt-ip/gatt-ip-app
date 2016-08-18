@@ -1,0 +1,55 @@
+<md-dialog flex="50" flex-xs="90" flex-md="50" aria-label="DeviceInfo" ng-cloak>
+    <form>
+        <md-dialog-content>
+            <div class="md-dialog-content content-padding">
+                <!-- <div layout="row" layout-align="space-between start">
+                    <div flex="100">
+                        <md-input-container class="md-block mb-0" flex-gt-sm >
+                            <label>Raw Data</label>
+                            <input ng-model="rawAdvertisingData" ng-disabled="true">
+                        </md-input-container>
+                    </div>
+                    <div>
+                        <md-input-container>
+                            <md-select ng-model="showformat" aria-label="formatType" ng-change="changeDataFormat(this)">
+                                <md-option value="00">Hex</md-option>
+                                <md-option value="01">ASCII</md-option>
+                                <md-option value="02">Decimal</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div> -->
+                <span flex></span>
+                <label>Details</label>
+                <div layout="row" class="row-border-top mt-10">
+                    <div flex="40" class="font-14 font-bold gray-color innder-padding">TYPE</div>
+                    <div flex="60" class="font-14 font-bold gray-color right-text-padding">VALUE</div>
+                </div>
+                <div layout="row" class="row-border-bottom" ng-if="discoverable">
+                    <div flex="40" class="font-14 gray-color font-normal innder-padding">Connectable</div>
+                    <div flex="60" class="font-14 gray-color font-normal right-text-padding">{{discoverable}}</div>
+                </div>
+                <div layout="row" class="row-border-bottom" ng-if="serviceUUIDs && serviceUUIDs.length > 0">
+                    <div flex="40" class="font-14 gray-color font-normal innder-padding">Service UUID</div>
+                    <div flex="60" class="font-14 gray-color font-normal right-text-padding" style="word-wrap: break-word;">{{serviceUUIDs}}</div>
+                </div>
+                <div layout="row" class="row-border-bottom" ng-if="manufacturerData">
+                    <div flex="40" class="font-14 gray-color font-normal innder-padding">Manufacturer Data</div>
+                    <div flex="60" class="font-14 gray-color font-normal right-text-padding" style="word-wrap: break-word;">{{manufacturerData}}</div>
+                </div>
+                <div layout="row" class="row-border-bottom" ng-if="name">
+                    <div flex="40" class="font-14 gray-color font-normal innder-padding">Complete Name</div>
+                    <div flex="60" class="font-14 gray-color font-normal right-text-padding">{{name}}</div>
+                </div>
+                <div layout="row" class="row-border-bottom" ng-if="txpowerLevel">
+                    <div flex="40" class="font-14 gray-color font-normal innder-padding">TX Power Level</div>
+                    <div flex="60" class="font-14 gray-color font-normal right-text-padding">{{txpowerLevel}}</div>
+                </div>
+                <br>
+                <div layout="row" layout-align="center">
+                    <md-button class="md-raised md-primary md-button md-ink-ripple" ng-click="okClick()">OK</md-button>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

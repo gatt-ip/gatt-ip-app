@@ -1,21 +1,26 @@
-<html ng-app="GATT-IP">
-    <head>
-        <title>..::GATT-IP::..</title>
-        <link href="styles/bootstrap.min.min-1446037129247.css" rel="stylesheet">
-        <link href="styles/styles.min-1446037129247.css" rel="stylesheet">
-        <link href="styles/tab-styles.min-1446037129247.css" rel="stylesheet">
-        <link rel="stylesheet" href="styles/font-awesome.min.min-1446037129247.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-        <div ng-view></div>
-        
-        <script src="lib/angular/angular.min.js"></script>
-        <script src="lib/angular-route/angular-route.min.js"></script>
-        <script src="lib/angular-local-storage/angular-local-storage.min.js"></script>
-        <script src="lib/jquery/dist/jquery.min.js"></script>
-        <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="lib/gatt-ip-js/gatt-ip.js"></script>
-        <script src="scripts/app.min-1446037129247.js"></script>
-    </body>
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>.: GATT-IP :.</title>
+    <link href="styles/bootstrap.min.min-1471460186931.css" rel="stylesheet">
+    <link href="styles/styles.min-1471460186931.css" rel="stylesheet">
+
+    <link href="lib/angular-material/angular-material.min.css" rel="stylesheet">
+    <link href="lib/mdi/css/materialdesignicons.min.css" rel="stylesheet">
+  </head>
+
+  <script src="lib/angular/angular.min.js"></script>
+  <script src="lib/angular-animate/angular-animate.min.js"></script>
+  <script src="lib/angular-aria/angular-aria.min.js"></script>
+  <script src="lib/angular-material/angular-material.min.js"></script>
+  <script src='lib/angular-ui-router/release/angular-ui-router.min.js'></script>
+
+  <script src="lib/gatt-ip-js/dist/gattip.min-1471460186931.js"></script>
+  <script src="scripts/app.min-1471460186931.js"></script>
+
+  <body ng-app="bleExplorerApp">
+    <div ui-view></div> 
+  </body>
+
 </html>

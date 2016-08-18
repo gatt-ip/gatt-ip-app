@@ -1,23 +1,35 @@
-<body>
-    <div class="row logo-header">
-        <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 back-btn" ng-click="back()"></div>
-        <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
-        <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()"><h3>Log</h3></div>
+<div class="row logo-header" ng-show="isGattipApp">
+    <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 back-btn" ng-click="back()"></div>
+    <div class="col-lg-8 col-xs-6 col-sm-6 col-md-8 logo"></div>
+    <div class="col-lg-2 col-xs-3 col-sm-3 col-md-2 log-view" ng-click="gotologview()">
+        <h3>Log</h3></div>
+</div>
+<md-toolbar class="mb-10">
+    <div class="md-toolbar-tools">
+        <h2>
+          <span>{{bleexplorer.currentPeripheral.name}}</span>
+        </h2>
     </div>
-    <div class="row title-text">
-        <div class="col-lg-12 col-xs-12 col-sm-12 col-md-12 device-title"><h3> {{gattip.currentPeripheral.name}}</h3></div>
-    </div>
-    <a ng-repeat="service in gattip.currentPeripheral.services" ng-click="discoverCharacteristics(service)">
-        <div class="row servicelist-listview">
-            <div class="col-lg-11 col-xs-11 col-sm-11 col-md-11 devices-devicename">{{service.serviceName}}</div>
-            <div class="col-lg-1 col-xs-1 col-sm-1 col-md-1 servicelist-arrow-icon"></div>
+</md-toolbar>
+<div class="list-padding" ng-repeat="service in bleexplorer.currentPeripheral.services" ng-click="discoverCharacteristics(service)" style="cursor: pointer;">
+    <div layout="row" layout-align="start stretch" class="list-item1">
+        <div layout="row" flex="100" layout-align="space-between center" style="padding-left:10px;">
+            <div flex="95">
+                <div ng-show='service.serviceName'>
+                    <div layout="column" layout-align="start start">
+                        <div flex>{{service.serviceName}}</div>
+                        <div flex class="font-14">{{service.uuid}}</div>
+                    </div>
+                </div>
+                <div ng-hide='service.serviceName'>
+                    <div layout="column" layout-align="start start">
+                        <div flex>{{service.uuid}}</div>
+                    </div>
+                </div>
+            </div>
+            <div flex="5" class="text-right">
+                <i class="mdi mdi-chevron-right" style="font-size: 25px;"></i>
+            </div>
         </div>
-    </a>
-    <div class="alert-box alert-btn" id="customalert" ng-controller="AlertController">
-        <div id="alertmessage"></div>
-        <div>
-            <button type="button" class="btn btn-blue3" ng-click="hide_alert()"><i class="fa fa-check"></i> OK </button>
-        </div>
     </div>
-    
-</body>
+</div>

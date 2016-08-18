@@ -41,8 +41,6 @@
 
 @implementation LocalGATTIPViewController
 
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     logs = [Logs sharedSingleton];
@@ -51,8 +49,11 @@
         NSURL *indexURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"index" ofType:@"html" inDirectory:@"www"]];
         [self.webView loadRequest:[NSURLRequest requestWithURL:indexURL]];
         self.webView.delegate = self;
+        self.webView.scrollView.bounces = FALSE;
         dispatch_async(dispatch_get_main_queue(), ^{
-            webSocket->callbacks.didClientReadCallback = Callback;
+            webSocket->callbacks.didClientReadCallback = webSocketDidRead;
+            webSocket->callbacks.didAddClientCallback = webSocketDidAddClient;
+            webSocket->callbacks.willRemoveClientCallback = webSocketDidRemoveClient;
         });
         
         _gattip = [[GATTIP alloc] init];
@@ -60,7 +61,15 @@
     }
 }
 
-void Callback (WebSocketRef sockref, WebSocketClientRef client, CFStringRef value) {
+void webSocketDidAddClient (WebSocketRef sockref, WebSocketClientRef client) {
+    NSLog(@"webSocketDidAddClient");
+}
+
+void webSocketDidRemoveClient (WebSocketRef sockref, WebSocketClientRef client) {
+    NSLog(@"webSocketDidRemoveClient");
+}
+
+void webSocketDidRead (WebSocketRef sockref, WebSocketClientRef client, CFStringRef value) {
     if (!value) {
         return;
     }

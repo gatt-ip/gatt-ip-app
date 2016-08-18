@@ -1,9 +1,18 @@
-app.controller('characteristiclistController', ['$scope', 'gattip', function($scope, gattip) {
+app.controller('characteristiclistCtrl', function($scope, $state) {
+    // console.log('characteristiclistCtrl');
+    if(isGattipApp) $scope.isGattipApp = true;
+    $scope.bleexplorer = bleexplorer;
 
-    $scope.gattip = gattip;
+    if($scope.bleexplorer.isNotifying){
+        $scope.bleexplorer.currentCharacteristic.enableNotifications(function(charac, value) {
+            $scope.bleexplorer.isNotifying = value;
+            // console.log('Disable the notification ', value);
+        }, false);
+    }
 
     $scope.discoverDescriptors = function(characteristic) {
-        characteristic.discoverDescriptors();
+        $scope.bleexplorer.currentCharacteristic = characteristic;
+        $state.go('descriptorlist');
     };
 
     $scope.back = function() {
@@ -13,4 +22,4 @@ app.controller('characteristiclistController', ['$scope', 'gattip', function($sc
     $scope.gotologview = function() {
         window.location = 'gatt-ip://logview';
     };
-}]);
+});

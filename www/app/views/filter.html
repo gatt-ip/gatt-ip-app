@@ -1,0 +1,42 @@
+<md-bottom-sheet class="md-list md-has-header" ng-cloak>
+    <div style="padding-top:15px;">
+        <div class="md-toolbar-tools">
+            <h2>
+                <i class="mdi mdi-filter"></i> 
+                Scan Filters
+            </h2>
+        </div>
+    </div>
+    <div layout="row">
+        <div flex="100">
+            <md-input-container class="md-block">
+                <label>Filter by name</label>
+                <input ng-model="filter_name">
+            </md-input-container>
+        </div>
+        <div style="margin-top: 10px;">
+            <md-button class="md-icon-button md-accent" aria-label="clear" style="background-color: #fafafa;" ng-click="clearFilterName()">
+                <i class="mdi mdi-close" style="font-size: 22px;padding-top: 8px;"></i>
+            </md-button>
+        </div>
+    </div>
+    <div layout="row">
+        <div flex="100">
+            <md-input-container class="md-block">
+                <label>Filter by Sevice UUID</label>
+                <input ng-model="filter_serv_uuid">
+            </md-input-container>
+        </div>
+        <div style="margin-top: 10px;">
+            <md-button class="md-icon-button md-accent" aria-label="clear" style="background-color: #fafafa;" ng-click="clearFilterUUID()">
+                <i class="mdi mdi-close" style="font-size: 22px;padding-top: 8px;"></i>
+            </md-button>
+        </div>
+    </div>
+    <md-button class="md-raised md-primary" aria-label="rescan" ng-click="scanPeripsWithFilters()">
+        <div layout="row" layout-align="start start">
+            <div class="scan-filter"><i class="mdi mdi-reload"></i></div>
+            <div>Scan</div>
+        </div>
+    </md-button>
+</md-bottom-sheet>

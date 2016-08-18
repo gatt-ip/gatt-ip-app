@@ -1,127 +1,76 @@
 var url = "ws://localhost:6001"; //default
+// var url = "ws://192.168.1.27:54326";
+var GATTIP = require('gatt-ip').GATTIP;
+var isGattipApp = false;
 
 //called from native side
 function connectWithPort(port) {
+    isGattipApp = true;
     url = "ws://localhost:" + port;
     return url;
 }
 
-app.factory('gattip', ['$q', '$rootScope', '$location',
-    function($q, $rootScope, $location) {
-        var util = Util();
-        var isFirstTime = true;
-        var g = new GATTIP();
-        g.init(url);
+function initialiseGattip() {
 
-        g.oninit = function(params, error) {
-            g.configure(true);
-        };
-        g.onconfigure = function (params, error) {
-            g.centralState();
-        };
-        g.onstate = function(error) {
-            if (g.state === GATTIP.kPoweredOn) {
-                g.scan(true);
-            } else if (g.state === GATTIP.kPoweredOff) {
-                setTimeout(function() {
-                    g.centralState();
-                }, 3000);
-                       
-                if(isFirstTime) {
-                    $rootScope.$apply(function() {
-                        $location.path('/devicelist');
-                        util.show_alert("Please turn on Bluetooth to scan peripherals.");
-                    });
-                    isFirstTime = false;
-                }
-            } else if (g.state === GATTIP.kUnsupported) {
-                util.show_alert("Bluetooth Low Energy is not supported with this device.");
-            } else {
-                //TODO:other error cases
-            }
-        };
+    var g;
+    var ws;
 
-        g.onscan = function(peripheral, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
-            }
-            util.updatesignalimage(peripheral);
-            $rootScope.$apply();
-        };
+    function BLEEXPLORER() {
+        this.peripheral = {};
 
-        g.onconnect = function(peripheral, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
-            }
-            g.currentPeripheral = peripheral;
-            peripheral.discoverServices();
-        };
+        g = new GATTIP();
 
+        ws = new WebSocket(url);
 
-        g.ondisconnect = function(peripheral, error) {
-            g.currentPeripheral = null;
-
-            if (error && error.message) util.show_alert(error.code + ': ' + error.message);
-
-            $rootScope.$apply(function() {
-                $location.path('/devicelist');
+        ws.onopen = function() {
+            g.open({
+                stream: ws
             });
         };
 
-        g.ondiscoverServices = function(peripheral, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
-            }
-            $rootScope.$apply(function() {
-                $location.path('/servicelist');
+        g.once('state', function(state) {
+            window.bleexplorer.showAlert("Please turn on Bluetooth to scan peripherals.");
+        });
+
+        g.once('ready', function(gateway) {
+            window.bleexplorer._currentgateway = gateway;
+            // console.log('ready');
+            window.bleexplorer.scanStarts();
+            window.bleexplorer._currentgateway.scan(function() {
+                // console.log('Started scan');
+                window.bleexplorer._currentgateway.on('scan', window.bleexplorer.onScan);
             });
-        };
+        });
 
-        g.ondiscoverCharacteristics = function(peripheral, service, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
+        g.on('error', function(err) {
+            console.log(err);
+            if (window.bleexplorer.isShowingLoadingIndic && !window.bleexplorer.filterScan) {
+                window.bleexplorer.hideDialog();
             }
-            g.currentService = service;
-            $rootScope.$apply(function() {
-                $location.path('/characteristiclist');
-            });
-        };
 
-        g.ondiscoverDescriptors = function(peripheral, service, characteristic, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
+            if (err.message.indexOf('Device could not be connected') > 0 || err.message.indexOf('Timed out while waiting for discovery to complete') > 0) {
+                window.bleexplorer.showAlert('Device could not be connected! Try again');
+            } else if (err.message.indexOf('Device is disconnected while discovering services') > 0) {
+                window.bleexplorer.showAlert('Device is disconnected while discovering services..');
+            } else if (err.message.indexOf('Failed to get services') > 0) {
+                window.bleexplorer.showAlert('Failed to get services. Try again');
+            } else if (err.message.indexOf('Unexpectedly disconnected') > 0) {
+                window.bleexplorer.showAlert('Device is disconnected! Try again');
+                window.bleexplorer.currentPeripheral = null;
+                window.bleexplorer.mainState();
+                window.bleexplorer.scanStarts();
+                window.bleexplorer._currentgateway.scan(function() {
+                    // console.log('Started scan');
+                    window.bleexplorer._currentgateway.on('scan', window.bleexplorer.onScan);
+                });
+            } else if (err.message.indexOf('Invalid Length') > 0 || err.message.indexOf('length is invalid') > 0) {
+                window.bleexplorer.showAlert('Invalid Length. Please check the entered value');
+            } else if (err.message.indexOf('Timed out') > 0) {
+                window.bleexplorer.showAlert('Timed out while processing the Request');
+            } else if (err.message.indexOf('Unable to find the requested device') > 0) {
+                window.bleexplorer.showAlert('Sorry, unable to find the requested device. Issue a scan first');
             }
-            g.currentCharacteristic = characteristic;
-
-            if (characteristic.properties[1].enabled)
-                characteristic.read();
-
-            $rootScope.$apply(function() {
-                $location.path('/descriptorlist');
-            });
-        };
-
-        g.onupdateValue = function(peripheral, service, characteristic, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
-            }
-            $rootScope.$apply();
-        };
-
-        g.onwriteValue = function(peripheral, service, characteristic, error) {
-            if (error) {
-                util.show_alert(error.code + ': ' + error.message);
-                return;
-            }
-            $rootScope.$apply();
-        };
-        return g;
-
+        });
     }
-]);
+    window.bleexplorer = new BLEEXPLORER();
+}

@@ -1,101 +1,103 @@
 function Util() {
+
     this.updatesignalimage = function(peripheral) {
-        if (Math.abs(peripheral.rssi) < 10) {
-            peripheral.image = "images/signal_5@2x.png";
-        } else if (Math.abs(peripheral.rssi) < 30) {
-            peripheral.image = "images/signal_4@2x.png";
-        } else if (Math.abs(peripheral.rssi) < 50) {
-            peripheral.image = "images/signal_3@2x.png";
-        } else if (Math.abs(peripheral.rssi) < 70) {
-            peripheral.image = "images/signal_2@2x.png";
-        } else {
-            peripheral.image = "images/signal_1@2x.png";
+        if (!(peripheral && peripheral.rssi)) {
+            return peripheral;
         }
-        
+        if (Math.abs(peripheral.rssi) < 45) {
+            peripheral.image = 'images/signal_5@2x.png';
+        } else if (Math.abs(peripheral.rssi) < 55) {
+            peripheral.image = 'images/signal_4@2x.png';
+        } else if (Math.abs(peripheral.rssi) < 65) {
+            peripheral.image = 'images/signal_3@2x.png';
+        } else if (Math.abs(peripheral.rssi) < 75) {
+            peripheral.image = 'images/signal_2@2x.png';
+        } else {
+            peripheral.image = 'images/signal_1@2x.png';
+        }
+
         return peripheral;
     };
-    
+
+    this.pushUniqueObj = function(array, item) {
+        var found = false,
+            idx = -1;
+        if (typeof array !== 'undefined') {
+            for (idx = 0; idx < array.length; idx++) {
+                if (array[idx].uuid === item.uuid) {
+                    found = true;
+                    break;
+                }
+            }
+        } else {
+            array = [];
+        }
+        if (found) {
+            array.splice(idx, 1, item);
+            return array;
+        } else {
+            array.push(item);
+            return array;
+        }
+    };
+
+    this.isEmpty = function(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
+                return false;
+        }
+        return JSON.stringify(obj) === JSON.stringify({});
+    };
+
+    this.isValidHex = function(sNum){
+        var isHex = false;
+        for (var i = 0; i < sNum.length; i++) {
+            if((typeof sNum[i] === 'string') && ! isNaN( parseInt(sNum[i], 16) )){
+                isHex = true;
+            }else{
+                isHex = false;
+                return isHex;
+            }
+        }
+      return isHex;
+    };
+
     this.hex2a = function(hexx) {
-        var str = '';
-        if (hexx) {
+        if(hexx){
             var hex = hexx.toString();
-            for (var i = 0; i < hex.length; i += 2)
+            var str = '';
+            for (var i = 0; i < hex.length; i += 2) {
                 str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+            }
+            return str;
         }
-        return str;
     };
-    
+
     this.hex2dec = function(hexx) {
-        var str = '';
-        if (hexx) {
-            str = parseInt(hexx, 16);
-        }
-        return str;
+        return parseInt(hexx, 16);
     };
-    
+
     this.hex2b = function(hexx) {
         var num = hex2i(hexx);
         return num.toString(2);
     };
-    
+
     this.a2hex = function(asci) {
         var str = '';
-        for (a = 0; a < asci.length; a++) {
+        for (var a = 0; a < asci.length; a++) {
             str = str + asci.charCodeAt(a).toString(16);
         }
         return str;
     };
-    
-    this.a2dec = function(asci) {
-        var str = '';
-        for (a = 0; a < asci.length; a++) {
-            str = str + asci.charCodeAt(a);
-        }
-        return str;
-    };
-    
+
     this.dec2hex = function(d) {
         var hex = Number(d).toString(16);
         while (hex.length < 2) {
-            hex = "0" + hex;
+            hex = '0' + hex;
         }
+
         return hex;
     };
-    
-    this.dec2a = function(d) {
-        return hex2a(dec2hex(d));
-    };
-    
-    this.show_alert = function(message) {
-        $('#customalert').addClass('alert-show');
-        $('.alert-box').show();
-        
-        // display the message
-        $('#alertmessage').html(message);
-    };
-    
-    this.hide_alert = function() {
-        $('#customalert').removeClass('alert-show');
-        $('.alert-box').hide();
-    };
-    
+
     return this;
 }
-
-app.filter('orderObjectBy', function() {
-    return function(items, field, reverse) {
-        var filtered = [];
-        angular.forEach(items, function(item) {
-            filtered.push(item);
-        });
-        if (reverse) {
-            return filtered;
-        }
-
-        filtered.sort(function(a, b) {
-            return (Math.abs(a[field]) > Math.abs(b[field]) ? 1 : -1);
-        });
-
-        return filtered;
-    };
-});
